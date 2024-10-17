@@ -9,7 +9,8 @@ Supervised Learning and Neural Network Models<br/>
 <br/>
 By Ab Basit Rafi, Syed</h2><br/>
 
-![ReadmeImage_wText]()
+![ReadmeImage_wText](![Uploading ai-generated-8495417_1280.jpg…]()
+)
 
 Note: It is important that if you are going to use this code, all files
 are placed in a directory that matches this repository, for the better functionality of it.
