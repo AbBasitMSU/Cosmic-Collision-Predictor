@@ -4,7 +4,7 @@ CMSE-830 Class Project<br/></h1>
 --------------------------------
 
 <h2 align="center"><br/>
-Asteroid Impact Prediction using<br/>
+Cosmic Collision Prediction using<br/>
 Supervised Learning and Neural Network Models<br/>
 <br/>
 By Ab Basit Rafi, Syed</h2><br/>
