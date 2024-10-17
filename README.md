@@ -9,7 +9,7 @@ Supervised Learning and Neural Network Models<br/>
 <br/>
 By Ab Basit Rafi, Syed</h2><br/>
 
-![ReadmeImage_wText](https://github.com/maparisio/Asteroid-Impact-Prediction/assets/152572519/dd80ab66-bf53-44cd-a0a8-c50a6d454656)
+![ReadmeImage_wText]()
 
 Note: It is important that if you are going to use this code, all files
 are placed in a directory that matches this repository, for the better functionality of it.
