@@ -32,7 +32,7 @@ Content of the repository
   - orbits.csv
 - Asteroid definitions.pptx <-- Powerpoint presentation Intro to the project and definitions of the different columns in the dataset.
 - Asteroid_Predictions.ipynb <-- File started in Jupyter Notebook for data cleanup prior to Neural Network ML training
-- 
+
 ----------------------------------
 Guide to the Project
 ----------------------------------
