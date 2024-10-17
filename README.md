@@ -1,5 +1,5 @@
-<h1 align="center">DU - University of Denver<br/>
-Data Analysis & Visualization Bootcamp<br/></h1>
+<h1 align="center">Michigan State University<br/>
+CMSE-830 Class Project<br/></h1>
 
 --------------------------------
 
