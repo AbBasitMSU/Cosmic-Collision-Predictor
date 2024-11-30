@@ -11,7 +11,7 @@ import pickle
 # Assuming there's a dataset available with relevant features
 @st.cache
 def load_data():
-    data = pd.read_csv('asteroid_data.csv')  # Replace with your dataset file
+    data = pd.read_csv('Cleaned_Asteroid_Data.csv')  # Replace with your dataset file
     return data
 
 data = load_data()
