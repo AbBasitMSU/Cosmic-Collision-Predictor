@@ -2,124 +2,137 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import tensorflow as tf  # For loading .h5 models
+import random
 import os
 
-# Sidebar Navigation
-st.sidebar.title("Navigation")
-section = st.sidebar.radio(
-    "Go to",
-    ("Home", "Data Overview", "Predict Impact", "Documentation"),
+# User selection at the start
+st.title("Asteroid Impact Prediction App")
+user_type = st.selectbox(
+    "Who are you?",
+    ["Select User Type", "Public User", "Official User"]
 )
+
+# File Paths (Adjust as needed)
+CLEANED_ORBIT_FILE = "cleaned_Asteroid_orbit.csv"
+IMPACT_FILE = "impacts.csv"
+MODELS_DIR = "h5_Files"
+MODEL_NAME = "Asteroid_Impact_Model.h5"
+OFFICIAL_FILES = {
+    "Impact Analysis": "Impact_Analysis.ipynb",
+    "Orbits Analysis": "Orbits_Analysis.ipynb",
+    "Orbits vs Impacts Analysis": "Orbits_vs_Impacts.ipynb"
+}
 
 # Function to Load Data
 @st.cache
 def load_data():
-    orbit_data = pd.read_csv("cleaned_Asteroid_orbit.csv")
-    impact_data = pd.read_csv("impacts.csv")
+    orbit_data = pd.read_csv(CLEANED_ORBIT_FILE)
+    impact_data = pd.read_csv(IMPACT_FILE)
     return orbit_data, impact_data
 
-# Function to Load ML Model
+# Function to Load Model
 @st.cache(allow_output_mutation=True)
-def load_model(model_name):
-    model_path = f"h5_Files/{model_name}"
+def load_model():
+    model_path = os.path.join(MODELS_DIR, MODEL_NAME)
     if os.path.exists(model_path):
         model = tf.keras.models.load_model(model_path)
         return model
     else:
-        st.error(f"Model file '{model_name}' not found!")
+        st.error(f"Model file '{MODEL_NAME}' not found in '{MODELS_DIR}'!")
         st.stop()
 
-# Section: Home
-if section == "Home":
-    st.title("Asteroid Impact Prediction")
-    st.write(
-        """
-        Welcome to the Asteroid Impact Prediction Web App! This app uses advanced 
-        Machine Learning and Neural Network models to predict potential asteroid impacts.
-        
-        Navigate through the sections to explore data, make predictions, or view documentation.
-        """
-    )
+# Random Location Generator
+def generate_random_location():
+    latitude = round(random.uniform(-90, 90), 6)
+    longitude = round(random.uniform(-180, 180), 6)
+    return latitude, longitude
 
-# Section: Data Overview
-elif section == "Data Overview":
-    st.title("Data Overview")
-    orbit_data, impact_data = load_data()
-    st.subheader("Orbit Data")
-    st.write(orbit_data.head())
-    st.subheader("Impact Data")
-    st.write(impact_data.head())
+# Section: Public User
+if user_type == "Public User":
+    st.header("Welcome, Public User!")
 
-    st.write("### Dataset Details")
-    st.write(
-        """
-        - **Orbit Data**: Contains cleaned asteroid orbit data with columns like distance, velocity, and angle.
-        - **Impact Data**: Contains details of past impacts and predictions for future ones.
-        """
-    )
+    # Predict Impact
+    st.subheader("Asteroid Impact Prediction")
+    st.write("Enter the details of the asteroid below to predict the impact probability.")
 
-# Section: Predict Impact
-elif section == "Predict Impact":
-    st.title("Predict Asteroid Impact")
-    st.write(
-        """
-        Enter the details of an asteroid to predict the probability of an impact 
-        using the pre-trained Neural Network models.
-        """
-    )
-
-    # Input Fields
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
-    # Select Model
-    model_name = st.selectbox(
-        "Choose Prediction Model",
-        [
-            "Asteroid_Impact_Model.h5",
-            "Asteroid_Impact_Optimization_Model.h5",
-        ],
-    )
-
     if st.button("Predict Impact"):
-        model = load_model(model_name)
+        model = load_model()
         input_data = np.array([[velocity, distance, angle, size]])
         prediction = model.predict(input_data)
         impact_probability = prediction[0][0]
 
-        st.subheader("Prediction Result")
-        st.write(f"Impact Probability: **{impact_probability:.2%}**")
+        latitude, longitude = generate_random_location()
+        st.write(f"**Impact Probability:** {impact_probability:.2%}")
+        st.write(f"**Random Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
 
-# Section: Documentation
-elif section == "Documentation":
-    st.title("Documentation")
-    st.write("### About the Project")
-    st.write(
-        """
-        This app leverages datasets related to asteroid orbits and impacts. It uses 
-        cleaned data (`cleaned_Asteroid_orbit.csv`) and models trained on Jupyter 
-        and Colab notebooks.
-        """
-    )
-    st.write("### Files Overview")
-    st.write(
-        """
-        - **impacts.csv**: Raw impact data.
-        - **orbits.csv**: Raw orbit data.
-        - **cleaned_Asteroid_orbit.csv**: Cleaned version of orbit data.
-        - **Asteroid_Impact_Model.h5**: Pre-trained NN model for impact prediction.
-        - **Asteroid_Impact_Optimization_Model.h5**: Optimized NN model for impact prediction.
-        - **Asteroid_Predictions.ipynb**: Data cleaning and model training script.
-        """
-    )
-    st.write("### Columns in the Data")
-    st.write(
-        """
-        - **Velocity (km/s)**: Speed of the asteroid.
-        - **Distance (AU)**: Distance from Earth in Astronomical Units.
-        - **Angle (degrees)**: Trajectory angle.
-        - **Size (km)**: Estimated size of the asteroid.
-        """
-    )
+    # About Asteroids
+    st.subheader("About Asteroids")
+    st.write("""
+        Asteroids are rocky bodies orbiting the Sun. While most asteroids remain in the asteroid belt, 
+        some pass near Earth, presenting potential risks. If a collision occurs, the impact depends on 
+        the asteroid's size, velocity, and angle. Modern technology enables scientists to predict 
+        asteroid impacts and take precautions to reduce risks.
+    """)
+
+# Section: Official User
+elif user_type == "Official User":
+    st.header("Welcome, Official User!")
+
+    # Login or Sign Up
+    login_signup = st.radio("Do you want to log in or sign up?", ["Log In", "Sign Up"])
+
+    if login_signup == "Log In":
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Log In"):
+            # Placeholder login logic
+            if username == "admin" and password == "admin123":
+                st.success("Login Successful!")
+            else:
+                st.error("Invalid credentials! Please try again.")
+    elif login_signup == "Sign Up":
+        new_username = st.text_input("Choose a Username")
+        new_password = st.text_input("Choose a Password", type="password")
+        if st.button("Sign Up"):
+            st.success("Sign Up Successful! Please log in to continue.")
+
+    # After login
+    if st.button("Proceed to Dashboard (Demo Login Required)"):
+        # Predict Impact
+        st.subheader("Asteroid Impact Prediction")
+        velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
+        distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+        angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+        size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+
+        if st.button("Predict Impact (Official)"):
+            model = load_model()
+            input_data = np.array([[velocity, distance, angle, size]])
+            prediction = model.predict(input_data)
+            impact_probability = prediction[0][0]
+            st.write(f"Impact Probability: {impact_probability:.2%}")
+
+        # Data Analysis
+        st.subheader("Data Analysis")
+        orbit_data, impact_data = load_data()
+        st.write("### Orbit Data")
+        st.write(orbit_data.head())
+        st.write("### Impact Data")
+        st.write(impact_data.head())
+
+        # View Analysis Files
+        st.subheader("Run Analysis and View Files")
+        analysis_file = st.selectbox("Select Analysis File", list(OFFICIAL_FILES.keys()))
+        st.write(f"Selected File: {OFFICIAL_FILES[analysis_file]}")
+
+        if st.button("Run Analysis"):
+            st.write(f"Running analysis for {OFFICIAL_FILES[analysis_file]}... (This is a placeholder)")
+
+# Default Selection
+else:
+    st.info("Please select your user type to proceed.")
