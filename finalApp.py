@@ -1,15 +1,18 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import tensorflow as tf  # For loading .h5 models
+import tensorflow as tf
+import hashlib
+import json
 import random
-import os
+
+# File to store user credentials
+CREDENTIALS_FILE = "users.json"
 
 # Background Image Function
 def set_background(image_url):
     """
-    Set a light background image in the Streamlit app using custom CSS.
-    :param image_url: URL of the background image.
+    Set a background image with CSS styling.
     """
     st.markdown(
         f"""
@@ -27,7 +30,7 @@ def set_background(image_url):
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.4); /* Light overlay for readability */
+            background-color: rgba(255, 255, 255, 0.4);
             z-index: -1;
         }}
         </style>
@@ -35,68 +38,57 @@ def set_background(image_url):
         unsafe_allow_html=True
     )
 
-# Use an online URL for the background
-set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
+# Password hashing function
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
-# Title and Content Styling
-st.markdown(
-    """
-    <style>
-    h1, h2, h3, h4, h5 {{
-        color: #18453b; /* Custom color for headings (RGB 24, 69, 59) */
-    }}
-    p, label, .stTextInput > label {{
-        color: #18453b; /* Custom color for text (RGB 24, 69, 59) */
-    }}
-    .block-container {{
-        background-color: rgba(255, 255, 255, 0.8); /* Transparent white background for content */
-        padding: 20px;
-        border-radius: 10px;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Load and save credentials
+def load_credentials():
+    try:
+        with open(CREDENTIALS_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
 
-# Example UI components
-st.title("Asteroid Impact Prediction App")
-st.write("This is a sample web app with a light space-themed background.")
+def save_credentials(credentials):
+    with open(CREDENTIALS_FILE, "w") as file:
+        json.dump(credentials, file)
 
-# User selection at the start
-st.title("Asteroid Impact Prediction App")
-user_type = st.selectbox(
-    "Who are you?",
-    ["Select User Type", "Public User", "Official User"]
-)
+# Login functionality
+def login():
+    st.subheader("Log In")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
-# File Paths (Adjust as needed)
-CLEANED_ORBIT_FILE = "cleaned_Asteroid_orbit.csv"
-IMPACT_FILE = "impacts.csv"
-MODELS_DIR = "h5_Files"
-MODEL_NAME = "Asteroid_Impact_Model.h5"
-OFFICIAL_FILES = {
-    "Impact Analysis": "Impact_Analysis.ipynb",
-    "Orbits Analysis": "Orbits_Analysis.ipynb",
-    "Orbits vs Impacts Analysis": "Orbits_vs_Impacts.ipynb"
-}
+    if st.button("Log In"):
+        credentials = load_credentials()
+        hashed_password = hash_password(password)
 
-# Function to Load Data
-@st.cache
-def load_data():
-    orbit_data = pd.read_csv(CLEANED_ORBIT_FILE)
-    impact_data = pd.read_csv(IMPACT_FILE)
-    return orbit_data, impact_data
+        if username in credentials and credentials[username] == hashed_password:
+            st.success(f"Welcome, {username}!")
+            st.session_state["logged_in"] = True
+            st.session_state["username"] = username
+        else:
+            st.error("Invalid username or password.")
 
-# Function to Load Model
-@st.cache(allow_output_mutation=True)
-def load_model():
-    model_path = os.path.join(MODELS_DIR, MODEL_NAME)
-    if os.path.exists(model_path):
-        model = tf.keras.models.load_model(model_path)
-        return model
-    else:
-        st.error(f"Model file '{MODEL_NAME}' not found in '{MODELS_DIR}'!")
-        st.stop()
+# Signup functionality
+def signup():
+    st.subheader("Sign Up")
+    username = st.text_input("Choose a Username")
+    password = st.text_input("Choose a Password", type="password")
+    confirm_password = st.text_input("Confirm Password", type="password")
+
+    if st.button("Sign Up"):
+        if password != confirm_password:
+            st.error("Passwords do not match.")
+        else:
+            credentials = load_credentials()
+            if username in credentials:
+                st.error("Username already exists.")
+            else:
+                credentials[username] = hash_password(password)
+                save_credentials(credentials)
+                st.success("Sign up successful! You can now log in.")
 
 # Random Location Generator
 def generate_random_location():
@@ -104,15 +96,21 @@ def generate_random_location():
     longitude = round(random.uniform(-180, 180), 6)
     return latitude, longitude
 
-# Section: Public User
-if user_type == "Public User":
-    st.header("Welcome, Public User!")
+# Function to Load Model
+@st.cache(allow_output_mutation=True)
+def load_model():
+    model_path = "h5_Files/Asteroid_Impact_Model.h5"
+    if not os.path.exists(model_path):
+        st.error("Model file not found!")
+        st.stop()
+    return tf.keras.models.load_model(model_path)
 
-    # Predict Impact
-    st.subheader("Asteroid Impact Prediction")
-    st.write("Enter the details of the asteroid below to predict the impact probability.")
-
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
+# Public User Section
+def public_user_section():
+    st.header("Asteroid Impact Prediction")
+    st.write("Enter the details of an asteroid to predict its impact probability.")
+    
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
@@ -122,74 +120,60 @@ if user_type == "Public User":
         input_data = np.array([[velocity, distance, angle, size]])
         prediction = model.predict(input_data)
         impact_probability = prediction[0][0]
-
         latitude, longitude = generate_random_location()
-        st.write(f"**Impact Probability:** {impact_probability:.2%}")
-        st.write(f"**Random Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
 
-    # About Asteroids
+        st.write(f"**Impact Probability:** {impact_probability:.2%}")
+        st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
+
     st.subheader("About Asteroids")
     st.write("""
-        Asteroids are rocky bodies orbiting the Sun. While most asteroids remain in the asteroid belt, 
-        some pass near Earth, presenting potential risks. If a collision occurs, the impact depends on 
-        the asteroid's size, velocity, and angle. Modern technology enables scientists to predict 
-        asteroid impacts and take precautions to reduce risks.
+        Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
+        This tool predicts the probability of an impact based on size, velocity, distance, and angle.
     """)
 
-# Section: Official User
-elif user_type == "Official User":
-    st.header("Welcome, Official User!")
+# Official User Section
+def official_user_section():
+    st.header("Official Dashboard")
+    st.subheader(f"Welcome, {st.session_state['username']}!")
 
-    # Login or Sign Up
-    login_signup = st.radio("Do you want to log in or sign up?", ["Log In", "Sign Up"])
+    analysis_choice = st.selectbox(
+        "Choose Analysis",
+        ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"]
+    )
 
-    if login_signup == "Log In":
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Log In"):
-            # Placeholder login logic
-            if username == "admin" and password == "admin123":
-                st.success("Login Successful!")
-            else:
-                st.error("Invalid credentials! Please try again.")
-    elif login_signup == "Sign Up":
-        new_username = st.text_input("Choose a Username")
-        new_password = st.text_input("Choose a Password", type="password")
-        if st.button("Sign Up"):
-            st.success("Sign Up Successful! Please log in to continue.")
+    if analysis_choice == "Impact Analysis":
+        st.write("Performing Impact Analysis...")
+    elif analysis_choice == "Orbits Analysis":
+        st.write("Performing Orbits Analysis...")
+    elif analysis_choice == "Orbits vs Impacts Analysis":
+        st.write("Performing Orbits vs Impacts Analysis...")
 
-    # After login
-    if st.button("Proceed to Dashboard (Demo Login Required)"):
-        # Predict Impact
-        st.subheader("Asteroid Impact Prediction")
-        velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
-        distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-        angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
-        size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+    st.subheader("Data Visualization")
+    st.write("Data visualizations will appear here (e.g., charts, graphs).")
 
-        if st.button("Predict Impact (Official)"):
-            model = load_model()
-            input_data = np.array([[velocity, distance, angle, size]])
-            prediction = model.predict(input_data)
-            impact_probability = prediction[0][0]
-            st.write(f"Impact Probability: {impact_probability:.2%}")
+# Main Function
+def main():
+    # Set the background image
+    set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
-        # Data Analysis
-        st.subheader("Data Analysis")
-        orbit_data, impact_data = load_data()
-        st.write("### Orbit Data")
-        st.write(orbit_data.head())
-        st.write("### Impact Data")
-        st.write(impact_data.head())
+    # Login or Signup Navigation
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
 
-        # View Analysis Files
-        st.subheader("Run Analysis and View Files")
-        analysis_file = st.selectbox("Select Analysis File", list(OFFICIAL_FILES.keys()))
-        st.write(f"Selected File: {OFFICIAL_FILES[analysis_file]}")
+    if st.session_state["logged_in"]:
+        st.sidebar.title("Navigation")
+        user_type = st.sidebar.radio("Choose a Section", ["Public User", "Official User"])
+        if user_type == "Public User":
+            public_user_section()
+        elif user_type == "Official User":
+            official_user_section()
+    else:
+        choice = st.sidebar.radio("Choose an Option", ["Log In", "Sign Up"])
+        if choice == "Log In":
+            login()
+        elif choice == "Sign Up":
+            signup()
 
-        if st.button("Run Analysis"):
-            st.write(f"Running analysis for {OFFICIAL_FILES[analysis_file]}... (This is a placeholder)")
-
-# Default Selection
-else:
-    st.info("Please select your user type to proceed.")
+# Run the app
+if __name__ == "__main__":
+    main()
