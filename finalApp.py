@@ -36,7 +36,7 @@ def set_background(image_url):
     )
 
 # Use an online URL for the background
-set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/0222.jpg")
+set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Image_0222.wbp")
 
 # Title and Content Styling
 st.markdown(
