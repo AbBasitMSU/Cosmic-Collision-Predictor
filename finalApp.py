@@ -1,101 +1,125 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import altair as alt
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-import pickle
-
-# Load or simulate dataset
-# Assuming there's a dataset available with relevant features
-@st.cache
-def load_data():
-    data = pd.read_csv('Cleaned_Asteroid_Data.csv')  # Replace with your dataset file
-    return data
-
-data = load_data()
+import tensorflow as tf  # For loading .h5 models
+import os
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-section = st.sidebar.radio("Go to", ("New Body Input", "Documentation", "Data Processing", "Analysis", "Result Prediction"))
+section = st.sidebar.radio(
+    "Go to",
+    ("Home", "Data Overview", "Predict Impact", "Documentation"),
+)
 
-# New Body Input Section
-if section == "New Body Input":
-    st.title("Add New Celestial Body")
-    speed = st.number_input("Speed (km/s)", min_value=0.0, value=0.0)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0)
-    age = st.number_input("Age (millions of years)", min_value=0.0, value=0.0)
-    
-    if st.button("Predict Collision Risk"):
-        # Placeholder for prediction model
-        features = np.array([speed, angle, distance, age]).reshape(1, -1)
-        # Load model (Assuming it was saved earlier)
-        model = pickle.load(open('collision_model.pkl', 'rb'))
-        prediction = model.predict(features)
-        st.write(f"Collision Probability: {prediction[0]}")
+# Function to Load Data
+@st.cache
+def load_data():
+    orbit_data = pd.read_csv("cleaned_Asteroid_orbit.csv")
+    impact_data = pd.read_csv("impacts.csv")
+    return orbit_data, impact_data
 
-# Documentation Section
+# Function to Load ML Model
+@st.cache(allow_output_mutation=True)
+def load_model(model_name):
+    model_path = f"h5_Files/{model_name}"
+    if os.path.exists(model_path):
+        model = tf.keras.models.load_model(model_path)
+        return model
+    else:
+        st.error(f"Model file '{model_name}' not found!")
+        st.stop()
+
+# Section: Home
+if section == "Home":
+    st.title("Asteroid Impact Prediction")
+    st.write(
+        """
+        Welcome to the Asteroid Impact Prediction Web App! This app uses advanced 
+        Machine Learning and Neural Network models to predict potential asteroid impacts.
+        
+        Navigate through the sections to explore data, make predictions, or view documentation.
+        """
+    )
+
+# Section: Data Overview
+elif section == "Data Overview":
+    st.title("Data Overview")
+    orbit_data, impact_data = load_data()
+    st.subheader("Orbit Data")
+    st.write(orbit_data.head())
+    st.subheader("Impact Data")
+    st.write(impact_data.head())
+
+    st.write("### Dataset Details")
+    st.write(
+        """
+        - **Orbit Data**: Contains cleaned asteroid orbit data with columns like distance, velocity, and angle.
+        - **Impact Data**: Contains details of past impacts and predictions for future ones.
+        """
+    )
+
+# Section: Predict Impact
+elif section == "Predict Impact":
+    st.title("Predict Asteroid Impact")
+    st.write(
+        """
+        Enter the details of an asteroid to predict the probability of an impact 
+        using the pre-trained Neural Network models.
+        """
+    )
+
+    # Input Fields
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+
+    # Select Model
+    model_name = st.selectbox(
+        "Choose Prediction Model",
+        [
+            "Asteroid_Impact_Model.h5",
+            "Asteroid_Impact_Optimization_Model.h5",
+        ],
+    )
+
+    if st.button("Predict Impact"):
+        model = load_model(model_name)
+        input_data = np.array([[velocity, distance, angle, size]])
+        prediction = model.predict(input_data)
+        impact_probability = prediction[0][0]
+
+        st.subheader("Prediction Result")
+        st.write(f"Impact Probability: **{impact_probability:.2%}**")
+
+# Section: Documentation
 elif section == "Documentation":
-    st.title("Cosmic Collision Predictor - Documentation")
-    st.write("This app predicts the collision probability of asteroids based on features like speed, distance, and angle.")
-    st.write("We use advanced Machine Learning models to provide accurate risk analysis.")
-    st.write("Each section provides an insight into what the app offers.")
-
-# Data Processing Section
-elif section == "Data Processing":
-    st.title("Data Processing Overview")
-    st.write("### Data Cleaning and Preparation")
-    st.write("The data is cleaned by removing NaN values, scaling using StandardScaler, and ensuring valid data entries.")
-    st.write("Below is a preview of the cleaned dataset:")
-    
-    # Data Cleaning Process
-    data_cleaned = data.dropna()
-    scaler = StandardScaler()
-    data_scaled = pd.DataFrame(scaler.fit_transform(data_cleaned), columns=data_cleaned.columns)
-    st.write(data_scaled.head())
-
-# Analysis Section
-elif section == "Analysis":
-    st.title("Asteroid Data Analysis")
-    st.write("### Visualizing Key Features")
-    st.write("Use the visualizations below to understand relationships between different asteroid features.")
-    
-    chart = alt.Chart(data).mark_circle(size=60).encode(
-        x='speed',
-        y='distance',
-        color='collision_probability',
-        tooltip=['name', 'speed', 'distance', 'collision_probability']
-    ).interactive()
-    st.altair_chart(chart, use_container_width=True)
-    st.write("The scatter plot above visualizes the speed vs. distance for asteroids, color-coded by collision probability.")
-
-# Result Prediction Section
-elif section == "Result Prediction":
-    st.title("Result Prediction for New Bodies")
-    st.write("### Predict Collision Probability")
-    st.write("Use the prediction model to estimate the collision risk based on input features such as speed, angle, distance, and age.")
-    
-    # Assume the model is already trained and saved as 'collision_model.pkl'
-    model = pickle.load(open('collision_model.pkl', 'rb'))
-    
-    X = data[['speed', 'angle', 'distance', 'age']]
-    y = data['collision_probability']
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model.fit(X_train, y_train)
-    
-    accuracy = model.score(X_test, y_test)
-    st.write(f"Model Accuracy: {accuracy * 100:.2f}%")
-    
-    # User Input Form for Prediction
-    user_speed = st.number_input("Speed for Prediction", min_value=0.0, value=0.0)
-    user_angle = st.number_input("Angle for Prediction", min_value=0.0, value=0.0)
-    user_distance = st.number_input("Distance for Prediction", min_value=0.0, value=0.0)
-    user_age = st.number_input("Age for Prediction", min_value=0.0, value=0.0)
-    
-    if st.button("Predict New Body Collision Risk"):
-        new_features = np.array([user_speed, user_angle, user_distance, user_age]).reshape(1, -1)
-        new_prediction = model.predict(new_features)
-        st.write(f"Predicted Collision Probability: {new_prediction[0]}")
+    st.title("Documentation")
+    st.write("### About the Project")
+    st.write(
+        """
+        This app leverages datasets related to asteroid orbits and impacts. It uses 
+        cleaned data (`cleaned_Asteroid_orbit.csv`) and models trained on Jupyter 
+        and Colab notebooks.
+        """
+    )
+    st.write("### Files Overview")
+    st.write(
+        """
+        - **impacts.csv**: Raw impact data.
+        - **orbits.csv**: Raw orbit data.
+        - **cleaned_Asteroid_orbit.csv**: Cleaned version of orbit data.
+        - **Asteroid_Impact_Model.h5**: Pre-trained NN model for impact prediction.
+        - **Asteroid_Impact_Optimization_Model.h5**: Optimized NN model for impact prediction.
+        - **Asteroid_Predictions.ipynb**: Data cleaning and model training script.
+        """
+    )
+    st.write("### Columns in the Data")
+    st.write(
+        """
+        - **Velocity (km/s)**: Speed of the asteroid.
+        - **Distance (AU)**: Distance from Earth in Astronomical Units.
+        - **Angle (degrees)**: Trajectory angle.
+        - **Size (km)**: Estimated size of the asteroid.
+        """
+    )
