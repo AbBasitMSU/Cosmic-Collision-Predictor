@@ -1,9 +1,8 @@
-streamlit 
+streamlit
 pandas
 plotly
 seaborn
 matplotlib
 numpy
 altair
-scikit-klearn
-pickle
+scikit-learn
