@@ -8,22 +8,29 @@ import os
 # Background Image Function
 def set_background(image_url):
     """
-    Set a blurry background image in the Streamlit app using custom CSS.
+    Set a light blurry background image in the Streamlit app using custom CSS.
     :param image_url: URL or local path of the image.
     """
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-image: url("{image_url}");
+            background: url("{image_url}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            filter: blur(10px); /* Blurs the image */
-            -webkit-filter: blur(10px);
         }}
-        .content {{
-            backdrop-filter: blur(0px); /* Makes content readable */
+        .stApp::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5); /* Light overlay for readability */
+            z-index: -1;
+            backdrop-filter: blur(8px); /* Blurs background */
+            -webkit-backdrop-filter: blur(8px);
         }}
         </style>
         """,
@@ -31,7 +38,7 @@ def set_background(image_url):
     )
 
 # Set the background image
-set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0220.jpeg")
+set_background("https://raw.githubusercontent.com/your_username/your_repo/main/IMG_0220.jpeg")
 
 # Title and Content Styling
 st.markdown(
@@ -44,7 +51,7 @@ st.markdown(
         color: #FFFFFF; /* White text for content */
     }}
     .block-container {{
-        background-color: rgba(0, 0, 0, 0.6); /* Adds a transparent dark layer */
+        background-color: rgba(0, 0, 0, 0.7); /* Transparent dark background for content */
         padding: 20px;
         border-radius: 10px;
     }}
