@@ -1,8 +1,4 @@
 streamlit
 pandas
-plotly
-seaborn
-matplotlib
 numpy
-altair
-scikit-learn
+tensorflow
