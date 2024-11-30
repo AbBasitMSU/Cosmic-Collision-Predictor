@@ -3,3 +3,7 @@ pandas
 plotly
 seaborn
 matplotlib
+numpy
+altair
+sklearn
+pickle
