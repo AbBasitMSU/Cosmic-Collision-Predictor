@@ -27,7 +27,7 @@ def set_background(image_url):
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.5); /* Light overlay for readability */
+            background-color: rgba(24, 69, 59, 0.5); /* Light overlay for readability */
             z-index: -1;
             backdrop-filter: blur(8px); /* Blurs background */
             -webkit-backdrop-filter: blur(8px);
@@ -48,10 +48,10 @@ st.markdown(
         color:#18453B; /* Gold color for headings */
     }}
     p, label {{
-        color: #FFFFFF; /* White text for content */
+        color: #18453B; /* White text for content */
     }}
     .block-container {{
-        background-color: rgba(0, 0, 0, 0.7); /* Transparent dark background for content */
+        background-color: rgba(24, 69, 59, 0.7); /* Transparent dark background for content */
         padding: 20px;
         border-radius: 10px;
     }}
