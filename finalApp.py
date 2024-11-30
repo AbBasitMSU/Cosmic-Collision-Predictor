@@ -5,6 +5,54 @@ import tensorflow as tf  # For loading .h5 models
 import random
 import os
 
+# Background Image Function
+def set_background(image_url):
+    """
+    Set a blurry background image in the Streamlit app using custom CSS.
+    :param image_url: URL or local path of the image.
+    """
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("{image_url}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: blur(10px); /* Blurs the image */
+            -webkit-filter: blur(10px);
+        }}
+        .content {{
+            backdrop-filter: blur(0px); /* Makes content readable */
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Set the background image
+set_background("https://raw.githubusercontent.com/your_username/your_repo/main/IMG_0220.jpeg")
+
+# Title and Content Styling
+st.markdown(
+    """
+    <style>
+    h1, h2, h3, h4, h5 {{
+        color: #FFD700; /* Gold color for headings */
+    }}
+    p, label {{
+        color: #FFFFFF; /* White text for content */
+    }}
+    .block-container {{
+        background-color: rgba(0, 0, 0, 0.6); /* Adds a transparent dark layer */
+        padding: 20px;
+        border-radius: 10px;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # User selection at the start
 st.title("Asteroid Impact Prediction App")
 user_type = st.selectbox(
