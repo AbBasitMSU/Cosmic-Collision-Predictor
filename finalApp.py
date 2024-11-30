@@ -27,7 +27,7 @@ def set_background(image_url):
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(24, 69, 59, 0.5); /* Light overlay for readability */
+            background-color: rgba(255, 255, 255, 0.5); /* Light overlay for readability */
             z-index: -1;
             backdrop-filter: blur(8px); /* Blurs background */
             -webkit-backdrop-filter: blur(8px);
@@ -38,22 +38,23 @@ def set_background(image_url):
     )
 
 # Set the background image
-set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0221.jpeg")
+set_background("https://raw.githubusercontent.com/your_username/your_repo/main/IMG_0220.jpeg")
 
 # Title and Content Styling
 st.markdown(
     """
     <style>
     h1, h2, h3, h4, h5 {{
-        color:#18453B; /* Gold color for headings */
+        color: #18453b; /* Custom color for headings (RGB 24, 69, 59) */
     }}
-    p, label {{
-        color: #18453B; /* White text for content */
+    p, label, .stTextInput > label {{
+        color: #18453b; /* Custom color for text (RGB 24, 69, 59) */
     }}
     .block-container {{
-        background-color: rgba(24, 69, 59, 0.7); /* Transparent dark background for content */
+        background-color: rgba(255, 255, 255, 0.8); /* Light, semi-transparent background for content */
         padding: 20px;
         border-radius: 10px;
+        color: #18453b; /* Default text color */
     }}
     </style>
     """,
@@ -98,96 +99,4 @@ def load_model():
 
 # Random Location Generator
 def generate_random_location():
-    latitude = round(random.uniform(-90, 90), 6)
-    longitude = round(random.uniform(-180, 180), 6)
-    return latitude, longitude
-
-# Section: Public User
-if user_type == "Public User":
-    st.header("Welcome, Public User!")
-
-    # Predict Impact
-    st.subheader("Asteroid Impact Prediction")
-    st.write("Enter the details of the asteroid below to predict the impact probability.")
-
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
-    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
-
-    if st.button("Predict Impact"):
-        model = load_model()
-        input_data = np.array([[velocity, distance, angle, size]])
-        prediction = model.predict(input_data)
-        impact_probability = prediction[0][0]
-
-        latitude, longitude = generate_random_location()
-        st.write(f"**Impact Probability:** {impact_probability:.2%}")
-        st.write(f"**Random Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
-
-    # About Asteroids
-    st.subheader("About Asteroids")
-    st.write("""
-        Asteroids are rocky bodies orbiting the Sun. While most asteroids remain in the asteroid belt, 
-        some pass near Earth, presenting potential risks. If a collision occurs, the impact depends on 
-        the asteroid's size, velocity, and angle. Modern technology enables scientists to predict 
-        asteroid impacts and take precautions to reduce risks.
-    """)
-
-# Section: Official User
-elif user_type == "Official User":
-    st.header("Welcome, Official User!")
-
-    # Login or Sign Up
-    login_signup = st.radio("Do you want to log in or sign up?", ["Log In", "Sign Up"])
-
-    if login_signup == "Log In":
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Log In"):
-            # Placeholder login logic
-            if username == "admin" and password == "admin123":
-                st.success("Login Successful!")
-            else:
-                st.error("Invalid credentials! Please try again.")
-    elif login_signup == "Sign Up":
-        new_username = st.text_input("Choose a Username")
-        new_password = st.text_input("Choose a Password", type="password")
-        if st.button("Sign Up"):
-            st.success("Sign Up Successful! Please log in to continue.")
-
-    # After login
-    if st.button("Proceed to Dashboard (Demo Login Required)"):
-        # Predict Impact
-        st.subheader("Asteroid Impact Prediction")
-        velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=10.0, step=0.1)
-        distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-        angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
-        size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
-
-        if st.button("Predict Impact (Official)"):
-            model = load_model()
-            input_data = np.array([[velocity, distance, angle, size]])
-            prediction = model.predict(input_data)
-            impact_probability = prediction[0][0]
-            st.write(f"Impact Probability: {impact_probability:.2%}")
-
-        # Data Analysis
-        st.subheader("Data Analysis")
-        orbit_data, impact_data = load_data()
-        st.write("### Orbit Data")
-        st.write(orbit_data.head())
-        st.write("### Impact Data")
-        st.write(impact_data.head())
-
-        # View Analysis Files
-        st.subheader("Run Analysis and View Files")
-        analysis_file = st.selectbox("Select Analysis File", list(OFFICIAL_FILES.keys()))
-        st.write(f"Selected File: {OFFICIAL_FILES[analysis_file]}")
-
-        if st.button("Run Analysis"):
-            st.write(f"Running analysis for {OFFICIAL_FILES[analysis_file]}... (This is a placeholder)")
-
-# Default Selection
-else:
-    st.info("Please select your user type to proceed.")
+    latitude
