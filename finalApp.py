@@ -45,7 +45,7 @@ st.markdown(
     """
     <style>
     h1, h2, h3, h4, h5 {{
-        color: #FFD700; /* Gold color for headings */
+        color:#18453B; /* Gold color for headings */
     }}
     p, label {{
         color: #FFFFFF; /* White text for content */
