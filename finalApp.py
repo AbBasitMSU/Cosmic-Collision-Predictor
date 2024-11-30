@@ -1,166 +1,101 @@
-import streamlit as st 
+import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import seaborn as sns
-import matplotlib.pyplot as plt
+import numpy as np
+import altair as alt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+import pickle
 
-# Custom CSS for light green-themed background and text styling
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #d4f7dc;  /* Light green background */
-        color: #1f2937;  /* Darker color for better text readability */
-    }
-    .stApp {
-        background: linear-gradient(120deg, #d4f7dc 0%, #b7e9c8 50%, #a2dab2 100%);
-        color: #1f2937;  /* Darker text color for better readability */
-    }
-    h1, h2, h3, h4 {
-        color: #0a4f0f;  /* Dark green text for headers */
-    }
-    .css-1d391kg {
-        background-color: #a2dab2 !important;  /* Sidebar light green color */
-        color: #1f2937 !important;  /* Darker text for sidebar readability */
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
+# Load or simulate dataset
+# Assuming there's a dataset available with relevant features
+@st.cache
+def load_data():
+    data = pd.read_csv('asteroid_data.csv')  # Replace with your dataset file
+    return data
 
-# App title
-st.title("Asteroid Data Analysis with Interactive Features")
+data = load_data()
 
-# Sidebar for file uploads
-st.sidebar.header("Upload your datasets")
+# Sidebar Navigation
+st.sidebar.title("Navigation")
+section = st.sidebar.radio("Go to", ("New Body Input", "Documentation", "Data Processing", "Analysis", "Result Prediction"))
 
-# Uploading orbit dataset
-orbit_file = st.sidebar.file_uploader("Upload Orbit Dataset (CSV)", type=["csv"])
-# Uploading impacts dataset
-impacts_file = st.sidebar.file_uploader("Upload Impacts Dataset (CSV)", type=["csv"])
-
-# Sidebar for filtering options
-st.sidebar.header("Filter Options")
-
-
-# Check if both files are uploaded
-if orbit_file is not None and impacts_file is not None:
-    # Load datasets
-    orbit_df = pd.read_csv(orbit_file)
-    impacts_df = pd.read_csv(impacts_file)
-
-    # Display Raw Data
-    if st.sidebar.checkbox("Show Raw Orbit Data"):
-        st.subheader("Orbit Data")
-        st.write(orbit_df.head())
-        
-    if st.sidebar.checkbox("Show Raw Impacts Data"):
-        st.subheader("Impacts Data")
-        st.write(impacts_df.head())
-
-    # Data Cleaning Section
-    st.sidebar.header("Data Cleaning")
+# New Body Input Section
+if section == "New Body Input":
+    st.title("Add New Celestial Body")
+    speed = st.number_input("Speed (km/s)", min_value=0.0, value=0.0)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0)
+    age = st.number_input("Age (millions of years)", min_value=0.0, value=0.0)
     
-    if st.sidebar.button("Clean Orbit Data"):
-        # Implement your cleaning code here (copy from your existing code)
-        orbit_df = orbit_df.copy()  # Copy for safety
-        # Data cleaning steps...
-        orbit_df.dropna(subset=["Object Name"], inplace=True)
-        # More cleaning code...
-        
-        st.success("Orbit data cleaned!")
+    if st.button("Predict Collision Risk"):
+        # Placeholder for prediction model
+        features = np.array([speed, angle, distance, age]).reshape(1, -1)
+        # Load model (Assuming it was saved earlier)
+        model = pickle.load(open('collision_model.pkl', 'rb'))
+        prediction = model.predict(features)
+        st.write(f"Collision Probability: {prediction[0]}")
+
+# Documentation Section
+elif section == "Documentation":
+    st.title("Cosmic Collision Predictor - Documentation")
+    st.write("This app predicts the collision probability of asteroids based on features like speed, distance, and angle.")
+    st.write("We use advanced Machine Learning models to provide accurate risk analysis.")
+    st.write("Each section provides an insight into what the app offers.")
+
+# Data Processing Section
+elif section == "Data Processing":
+    st.title("Data Processing Overview")
+    st.write("### Data Cleaning and Preparation")
+    st.write("The data is cleaned by removing NaN values, scaling using StandardScaler, and ensuring valid data entries.")
+    st.write("Below is a preview of the cleaned dataset:")
     
-    if st.sidebar.button("Clean Impacts Data"):
-        impacts_df.dropna(inplace=True)  # Implement cleaning for impacts data
-        st.success("Impacts data cleaned!")
+    # Data Cleaning Process
+    data_cleaned = data.dropna()
+    scaler = StandardScaler()
+    data_scaled = pd.DataFrame(scaler.fit_transform(data_cleaned), columns=data_cleaned.columns)
+    st.write(data_scaled.head())
 
-    # Dropdown for selecting object name from Orbits data
-    object_name = st.sidebar.selectbox("Select Object Name", orbit_df['Object Name'].unique())
-
-    # Dropdown to filter data by object classification (add in the sidebar)
-    object_classification = st.sidebar.selectbox("Select Object Classification", orbit_df['Object Classification'].unique())
-
-    # Filter data based on selected object name and classification
-    filtered_orbit_data = orbit_df[(orbit_df['Object Name'] == object_name) & 
-                                   (orbit_df['Object Classification'] == object_classification)]
+# Analysis Section
+elif section == "Analysis":
+    st.title("Asteroid Data Analysis")
+    st.write("### Visualizing Key Features")
+    st.write("Use the visualizations below to understand relationships between different asteroid features.")
     
+    chart = alt.Chart(data).mark_circle(size=60).encode(
+        x='speed',
+        y='distance',
+        color='collision_probability',
+        tooltip=['name', 'speed', 'distance', 'collision_probability']
+    ).interactive()
+    st.altair_chart(chart, use_container_width=True)
+    st.write("The scatter plot above visualizes the speed vs. distance for asteroids, color-coded by collision probability.")
 
-    # Slider for selecting a range of asteroid magnitudes
-    mag_min, mag_max = st.sidebar.slider("Select Asteroid Magnitude Range", 
-                                          float(impacts_df['Asteroid Magnitude'].min()), 
-                                          float(impacts_df['Asteroid Magnitude'].max()), 
-                                          (float(impacts_df['Asteroid Magnitude'].min()), float(impacts_df['Asteroid Magnitude'].max())))
-
-    # Check if the 'Hazardous' column exists before adding the filter
-    if 'Hazardous' in impacts_df.columns:
-        hazardous_status = st.sidebar.selectbox("Select Hazardous Status", impacts_df['Hazardous'].unique())
-        # Filter impacts data based on magnitude range and hazardous status
-        filtered_impacts_data = impacts_df[(impacts_df['Asteroid Magnitude'] >= mag_min) & 
-                                           (impacts_df['Asteroid Magnitude'] <= mag_max) &
-                                           (impacts_df['Hazardous'] == hazardous_status)]
-    else:
-        # Filter impacts data based on magnitude range only (if Hazardous column does not exist)
-        filtered_impacts_data = impacts_df[(impacts_df['Asteroid Magnitude'] >= mag_min) & 
-                                           (impacts_df['Asteroid Magnitude'] <= mag_max)]
-
-    # Display filtered data
-    st.subheader("Filtered Orbit Data")
-    st.write(filtered_orbit_data)
-
-    st.subheader("Filtered Impacts Data")
-    st.write(filtered_impacts_data)
-
-    # Plot: Asteroid Magnitude Distribution
-    st.subheader("Asteroid Magnitude Distribution")
-    plt.figure(figsize=(10, 6))
-    sns.histplot(filtered_impacts_data['Asteroid Magnitude'], bins=20, kde=True)
-    st.pyplot(plt)
-
-    # **NEW**: Interactive Comparison of Orbits and Impacts Data using Plotly
-    st.subheader("Interactive Comparison of Orbits vs Impacts")
-
-    # Create a grouped bar chart to compare Orbit and Impacts data
-    comparison_df = pd.DataFrame({
-        'Orbit Eccentricity': filtered_orbit_data['Orbit Eccentricity'].mean(),
-        'Orbit Inclination (deg)': filtered_orbit_data['Orbit Inclination (deg)'].mean(),
-        'Asteroid Magnitude': filtered_impacts_data['Asteroid Magnitude'].mean()
-    }, index=[0])
-
-    fig = go.Figure(data=[
-        go.Bar(name='Orbit Eccentricity', x=['Orbits'], y=comparison_df['Orbit Eccentricity'], marker_color='lightblue'),
-        go.Bar(name='Orbit Inclination (deg)', x=['Orbits'], y=comparison_df['Orbit Inclination (deg)'], marker_color='orange'),
-        go.Bar(name='Asteroid Magnitude', x=['Impacts'], y=comparison_df['Asteroid Magnitude'], marker_color='green')
-    ])
-
-    fig.update_layout(barmode='group', title="Comparison of Orbits vs Impacts Data", xaxis_title="Data Type", yaxis_title="Mean Value")
-    st.plotly_chart(fig)
-
-    # **NEW**: Add an interactive scatter plot
-    st.subheader("Orbit Eccentricity vs Orbit Inclination (Interactive)")
-    fig_scatter = px.scatter(orbit_df, x='Orbit Eccentricity', y='Orbit Inclination (deg)', color='Object Classification',
-                             title="Interactive Scatter Plot: Orbit Eccentricity vs Inclination",
-                             labels={'Orbit Eccentricity': 'Eccentricity', 'Orbit Inclination (deg)': 'Inclination'})
-    st.plotly_chart(fig_scatter)
-
-    # Model Training Button
-    if st.sidebar.button("Train Model"):
-        # Call your model training code here
-        st.success("Model training started!")
-        
-        # After training, you could display the results
-        # model_accuracy = ...  # Get accuracy from model
-        # st.write(f"Model Accuracy: {model_accuracy:.2f}")
-
-    # Documentation
-    st.markdown("""
-    ### Documentation
-    This app allows you to analyze asteroid orbit and impact data. 
-    - Use the dropdown menus to select object names and classifications from the orbit data.
-    - Adjust the slider to filter impacts based on asteroid magnitude.
-    - The histogram visualizes the distribution of asteroid magnitudes for the filtered impacts.
-    - The bar plot compares mean values of Orbit Eccentricity, Inclination, and Asteroid Magnitude between Orbits and Impacts.
-    - Interactive scatter plots allow for detailed analysis of the relationship between Orbit Eccentricity and Inclination.
-    """)
-
-else:
-    st.warning("Please upload both CSV files to proceed.")
+# Result Prediction Section
+elif section == "Result Prediction":
+    st.title("Result Prediction for New Bodies")
+    st.write("### Predict Collision Probability")
+    st.write("Use the prediction model to estimate the collision risk based on input features such as speed, angle, distance, and age.")
+    
+    # Assume the model is already trained and saved as 'collision_model.pkl'
+    model = pickle.load(open('collision_model.pkl', 'rb'))
+    
+    X = data[['speed', 'angle', 'distance', 'age']]
+    y = data['collision_probability']
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model.fit(X_train, y_train)
+    
+    accuracy = model.score(X_test, y_test)
+    st.write(f"Model Accuracy: {accuracy * 100:.2f}%")
+    
+    # User Input Form for Prediction
+    user_speed = st.number_input("Speed for Prediction", min_value=0.0, value=0.0)
+    user_angle = st.number_input("Angle for Prediction", min_value=0.0, value=0.0)
+    user_distance = st.number_input("Distance for Prediction", min_value=0.0, value=0.0)
+    user_age = st.number_input("Age for Prediction", min_value=0.0, value=0.0)
+    
+    if st.button("Predict New Body Collision Risk"):
+        new_features = np.array([user_speed, user_angle, user_distance, user_age]).reshape(1, -1)
+        new_prediction = model.predict(new_features)
+        st.write(f"Predicted Collision Probability: {new_prediction[0]}")
