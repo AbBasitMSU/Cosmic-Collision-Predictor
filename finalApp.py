@@ -6,16 +6,16 @@ import random
 import os
 
 # Background Image Function
-def set_background(image_path):
+def set_background(image_url):
     """
     Set a light background image in the Streamlit app using custom CSS.
-    :param image_path: Path or URL of the background image.
+    :param image_url: URL of the background image.
     """
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background: url("data:image/png;base64,{image_path}");
+            background: url("{image_url}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -35,14 +35,8 @@ def set_background(image_path):
         unsafe_allow_html=True
     )
 
-# Encode the custom image in Base64
-import base64
-
-with open("/mnt/data/A_light_and_minimalistic_space-themed_background_f.png", "rb") as image_file:
-    encoded_image = base64.b64encode(image_file.read()).decode()
-
-# Set the background image
-set_background(encoded_image)
+# Use an online URL for the background
+set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/0222.jpg")
 
 # Title and Content Styling
 st.markdown(
@@ -63,6 +57,10 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# Example UI components
+st.title("Asteroid Impact Prediction App")
+st.write("This is a sample web app with a light space-themed background.")
 
 # User selection at the start
 st.title("Asteroid Impact Prediction App")
