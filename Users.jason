@@ -1,0 +1,86 @@
+import streamlit as st
+import json
+import hashlib
+
+# File to store user credentials
+CREDENTIALS_FILE = "users.json"
+
+# Load or initialize user credentials
+def load_credentials():
+    try:
+        with open(CREDENTIALS_FILE, "r") as file:
+            credentials = json.load(file)
+    except FileNotFoundError:
+        credentials = {}
+    return credentials
+
+def save_credentials(credentials):
+    with open(CREDENTIALS_FILE, "w") as file:
+        json.dump(credentials, file)
+
+# Password hashing function
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# Signup function
+def signup():
+    st.subheader("Sign Up")
+    new_username = st.text_input("Choose a Username")
+    new_password = st.text_input("Choose a Password", type="password")
+    confirm_password = st.text_input("Confirm Password", type="password")
+
+    if st.button("Sign Up"):
+        if new_password != confirm_password:
+            st.error("Passwords do not match. Please try again.")
+            return
+
+        credentials = load_credentials()
+        if new_username in credentials:
+            st.error("Username already exists. Please choose another.")
+            return
+
+        credentials[new_username] = hash_password(new_password)
+        save_credentials(credentials)
+        st.success("Sign Up Successful! You can now log in.")
+
+# Login function
+def login():
+    st.subheader("Log In")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Log In"):
+        credentials = load_credentials()
+        hashed_password = hash_password(password)
+
+        if username in credentials and credentials[username] == hashed_password:
+            st.success("Login Successful!")
+            st.session_state["logged_in"] = True
+            st.session_state["username"] = username
+        else:
+            st.error("Invalid username or password.")
+
+# Main function
+def main():
+    st.title("Asteroid Impact Prediction App")
+
+    # Check login state
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+
+    if st.session_state["logged_in"]:
+        st.write(f"Welcome, **{st.session_state['username']}**!")
+        st.write("You are now logged in.")
+        if st.button("Log Out"):
+            st.session_state["logged_in"] = False
+    else:
+        choice = st.radio("Choose an option", ["Log In", "Sign Up"])
+
+        if choice == "Log In":
+            login()
+        elif choice == "Sign Up":
+            signup()
+
+# Run the app
+if __name__ == "__main__":
+    main()
