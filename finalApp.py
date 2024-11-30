@@ -6,16 +6,16 @@ import random
 import os
 
 # Background Image Function
-def set_background(image_url):
+def set_background(image_path):
     """
-    Set a light blurry background image in the Streamlit app using custom CSS.
-    :param image_url: URL or local path of the image.
+    Set a light background image in the Streamlit app using custom CSS.
+    :param image_path: Path or URL of the background image.
     """
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background: url("{image_url}");
+            background: url("data:image/png;base64,{image_path}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -27,18 +27,22 @@ def set_background(image_url):
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.5); /* Light overlay for readability */
+            background-color: rgba(255, 255, 255, 0.4); /* Light overlay for readability */
             z-index: -1;
-            backdrop-filter: blur(8px); /* Blurs background */
-            -webkit-backdrop-filter: blur(8px);
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
+# Encode the custom image in Base64
+import base64
+
+with open("/mnt/data/A_light_and_minimalistic_space-themed_background_f.png", "rb") as image_file:
+    encoded_image = base64.b64encode(image_file.read()).decode()
+
 # Set the background image
-set_background("https://raw.githubusercontent.com/AbBAsitMSU/Cosmic-Collision-Predictor/main/IMG_0221.jpeg")
+set_background(encoded_image)
 
 # Title and Content Styling
 st.markdown(
@@ -51,10 +55,9 @@ st.markdown(
         color: #18453b; /* Custom color for text (RGB 24, 69, 59) */
     }}
     .block-container {{
-        background-color: rgba(255, 255, 255, 0.8); /* Light, semi-transparent background for content */
+        background-color: rgba(255, 255, 255, 0.8); /* Transparent white background for content */
         padding: 20px;
         border-radius: 10px;
-        color: #18453b; /* Default text color */
     }}
     </style>
     """,
