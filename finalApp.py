@@ -5,15 +5,13 @@ import tensorflow as tf
 import hashlib
 import json
 import random
+from datetime import datetime
 
 # File to store user credentials
 CREDENTIALS_FILE = "users.json"
 
 # Background Image Function
 def set_background(image_url):
-    """
-    Set a background image with CSS styling.
-    """
     st.markdown(
         f"""
         <style>
@@ -90,75 +88,57 @@ def signup():
                 save_credentials(credentials)
                 st.success("Sign up successful! You can now log in.")
 
-# Random Location Generator
-def generate_random_location():
-    latitude = round(random.uniform(-90, 90), 6)
-    longitude = round(random.uniform(-180, 180), 6)
-    return latitude, longitude
-
-# Function to Load Model
-@st.cache(allow_output_mutation=True)
-def load_model():
-    model_path = "h5_Files/Asteroid_Impact_Model.h5"
-    if not os.path.exists(model_path):
-        st.error("Model file not found!")
-        st.stop()
-    return tf.keras.models.load_model(model_path)
-
 # Public User Section
 def public_user_section():
-    st.header("Learn About Asteroids")
-    st.write("""
-    Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
-    Learn how collisions are predicted and what precautions can be taken.
-    """)
+    tab = st.sidebar.radio("Navigate", ["Learn About Asteroids", "Collision Prediction Calendar"])
 
-    st.subheader("Future Collisions Calendar")
-    st.write("Future collision probabilities will appear here (placeholder).")
+    if tab == "Learn About Asteroids":
+        st.header("Learn About Asteroids")
+        st.write("""
+        Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
+        Learn how collisions are predicted and what precautions can be taken.
+        """)
 
-    st.subheader("Enter New Asteroid Details")
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
-    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+    elif tab == "Collision Prediction Calendar":
+        st.header("Collision Prediction Calendar")
+        st.write("Explore potential collision dates .")
+        selected_date = st.date_input("Choose a Date")
 
-    if st.button("Predict Collision"):
-        model = load_model()
-        input_data = np.array([[velocity, distance, angle, size]])
-        prediction = model.predict(input_data)
-        impact_probability = prediction[0][0]
-        latitude, longitude = generate_random_location()
-
-        st.write(f"**Impact Probability:** {impact_probability:.2%}")
-        st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
+        # Fake collision data
+        if selected_date == datetime(2024, 12, 10).date():
+            st.write("**Collision Alert!**")
+            st.write(f"Date: {selected_date}")
+            st.write("Location: Latitude 23.5, Longitude 78.9")
+            st.write("Impact Time: 14:30 UTC")
+            st.write("Impact Area: 100 km radius")
+            st.subheader("Precautions")
+            st.write("""
+            1. Stay indoors and away from windows.
+            2. Stock up on food, water, and essentials.
+            3. Follow local government advisories.
+            """)
 
 # Official User Section
 def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
-    st.subheader("Analysis and Visualization")
+    option = st.sidebar.radio("Choose an Option", ["Predict Collision", "Data Analysis and Documentation"])
 
-    data_choice = st.selectbox(
-        "Choose Data to View",
-        ["Raw Orbit Data", "Raw Impact Data"]
-    )
+    if option == "Predict Collision":
+        st.subheader("Collision Prediction")
+        velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
+        distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+        angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+        size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
-    if data_choice == "Raw Orbit Data":
-        st.write("Orbit data will appear here (placeholder).")
-    elif data_choice == "Raw Impact Data":
-        st.write("Impact data will appear here (placeholder).")
+        if st.button("Predict"):
+            model = tf.keras.models.load_model("h5_Files/Asteroid_Impact_Model.h5")
+            input_data = np.array([[velocity, distance, angle, size]])
+            prediction = model.predict(input_data)
+            st.write(f"**Collision Probability:** {prediction[0][0]:.2%}")
 
-    st.subheader("Detailed Analysis")
-    analysis_choice = st.selectbox(
-        "Choose Analysis",
-        ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"]
-    )
-
-    if analysis_choice == "Impact Analysis":
-        st.write("Performing Impact Analysis...")
-    elif analysis_choice == "Orbits Analysis":
-        st.write("Performing Orbits Analysis...")
-    elif analysis_choice == "Orbits vs Impacts Analysis":
-        st.write("Performing Orbits vs Impacts Analysis...")
+    elif option == "Data Analysis and Documentation":
+        st.subheader("Data Analysis")
+        st.write("Raw Data and Analysis Details (placeholders).")
 
 # Main Function
 def main():
@@ -166,18 +146,32 @@ def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
     # User Role Selection
-    user_role = st.sidebar.selectbox("Who are you?", ["Public User", "Official User"])
+    if "user_type" not in st.session_state:
+        st.session_state["user_type"] = None
 
-    if user_role == "Public User":
+    if st.session_state["user_type"] is None:
+        st.title("Welcome to the Cosmic Collision Prediction App")
+        user_type = st.selectbox("Select User Type", ["Public User", "Official User"])
+
+        if user_type == "Public User":
+            st.session_state["user_type"] = "Public User"
+        elif user_type == "Official User":
+            st.session_state["user_type"] = "Official User"
+
+    # Public User Flow
+    elif st.session_state["user_type"] == "Public User":
         public_user_section()
-    elif user_role == "Official User":
+
+    # Official User Flow
+    elif st.session_state["user_type"] == "Official User":
         if "logged_in" not in st.session_state:
             st.session_state["logged_in"] = False
 
         if st.session_state["logged_in"]:
             official_user_section()
         else:
-            choice = st.sidebar.radio("Choose an Option", ["Log In", "Sign Up"])
+            st.title("Official User Login/Signup")
+            choice = st.radio("Choose an Option", ["Log In", "Sign Up"])
             if choice == "Log In":
                 login()
             elif choice == "Sign Up":
