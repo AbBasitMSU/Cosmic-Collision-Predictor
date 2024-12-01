@@ -107,15 +107,22 @@ def load_model():
 
 # Public User Section
 def public_user_section():
-    st.header("Asteroid Impact Prediction")
-    st.write("Enter the details of an asteroid to predict its impact probability.")
-    
+    st.header("Learn About Asteroids")
+    st.write("""
+    Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
+    Learn how collisions are predicted and what precautions can be taken.
+    """)
+
+    st.subheader("Future Collisions Calendar")
+    st.write("Future collision probabilities will appear here (placeholder).")
+
+    st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
-    if st.button("Predict Impact"):
+    if st.button("Predict Collision"):
         model = load_model()
         input_data = np.array([[velocity, distance, angle, size]])
         prediction = model.predict(input_data)
@@ -125,17 +132,22 @@ def public_user_section():
         st.write(f"**Impact Probability:** {impact_probability:.2%}")
         st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
 
-    st.subheader("About Asteroids")
-    st.write("""
-        Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
-        This tool predicts the probability of an impact based on size, velocity, distance, and angle.
-    """)
-
 # Official User Section
 def official_user_section():
-    st.header("Official Dashboard")
-    st.subheader(f"Welcome, {st.session_state['username']}!")
+    st.header(f"Welcome, {st.session_state['username']}")
+    st.subheader("Analysis and Visualization")
 
+    data_choice = st.selectbox(
+        "Choose Data to View",
+        ["Raw Orbit Data", "Raw Impact Data"]
+    )
+
+    if data_choice == "Raw Orbit Data":
+        st.write("Orbit data will appear here (placeholder).")
+    elif data_choice == "Raw Impact Data":
+        st.write("Impact data will appear here (placeholder).")
+
+    st.subheader("Detailed Analysis")
     analysis_choice = st.selectbox(
         "Choose Analysis",
         ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"]
@@ -148,31 +160,28 @@ def official_user_section():
     elif analysis_choice == "Orbits vs Impacts Analysis":
         st.write("Performing Orbits vs Impacts Analysis...")
 
-    st.subheader("Data Visualization")
-    st.write("Data visualizations will appear here (e.g., charts, graphs).")
-
 # Main Function
 def main():
     # Set the background image
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
-    # Login or Signup Navigation
-    if "logged_in" not in st.session_state:
-        st.session_state["logged_in"] = False
+    # User Role Selection
+    user_role = st.sidebar.selectbox("Who are you?", ["Public User", "Official User"])
 
-    if st.session_state["logged_in"]:
-        st.sidebar.title("Navigation")
-        user_type = st.sidebar.radio("Choose a Section", ["Public User", "Official User"])
-        if user_type == "Public User":
-            public_user_section()
-        elif user_type == "Official User":
+    if user_role == "Public User":
+        public_user_section()
+    elif user_role == "Official User":
+        if "logged_in" not in st.session_state:
+            st.session_state["logged_in"] = False
+
+        if st.session_state["logged_in"]:
             official_user_section()
-    else:
-        choice = st.sidebar.radio("Choose an Option", ["Log In", "Sign Up"])
-        if choice == "Log In":
-            login()
-        elif choice == "Sign Up":
-            signup()
+        else:
+            choice = st.sidebar.radio("Choose an Option", ["Log In", "Sign Up"])
+            if choice == "Log In":
+                login()
+            elif choice == "Sign Up":
+                signup()
 
 # Run the app
 if __name__ == "__main__":
