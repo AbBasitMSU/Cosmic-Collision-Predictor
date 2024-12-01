@@ -184,8 +184,6 @@ def main():
     # User Role Selection
     user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
-    st.header("SPACETRON Cosmic Collision Predictor App")
-    st.write(""" Welcome to your own collision predictor Application by SPACETRON. Please go ahead and check out your next collision possibilties .""")
 
     if user_role == "Public User":
         public_user_section()
