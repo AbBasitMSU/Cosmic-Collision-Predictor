@@ -185,11 +185,11 @@ def main():
     user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
 if user_role == "Public User":
-    public_user_section()
-elif user_role == "Official User":
-    if "logged_in" not in st.session_state:
-        st.session_state["logged_in"] = False
-        
+        public_user_section()
+    elif user_role == "Official User":
+        if "logged_in" not in st.session_state:
+            st.session_state["logged_in"] = False
+
         if st.session_state["logged_in"]:
             official_user_section()
         else:
@@ -198,7 +198,6 @@ elif user_role == "Official User":
                 login()
             elif choice == "Sign Up":
                 signup()
-
 # Run the app
 if __name__ == "__main__":
     main()
