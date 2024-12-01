@@ -106,12 +106,7 @@ def load_model():
         st.error("Model file not found!")
         st.stop()
     return tf.keras.models.load_model(model_path)
-# Select User Section
-def select_user_section():
-    st.header("SPACETRON Cosmic Collision Predictor App")
-    st.write("""
-    Welcom to your own collision predictor Application by SPACETRON. Please go ahead and check out your next collision possibilties .""")
-    
+        
 # Public User Section
 def public_user_section():
     st.header("Learn About Asteroids")
@@ -189,8 +184,9 @@ def main():
     # User Role Selection
     user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
-if user_role == "Select User"
-        select_user_section()
+    st.header("SPACETRON Cosmic Collision Predictor App")
+    st.write(""" Welcome to your own collision predictor Application by SPACETRON. Please go ahead and check out your next collision possibilties .""")
+
     if user_role == "Public User":
         public_user_section()
         elif user_role == "Official User":
