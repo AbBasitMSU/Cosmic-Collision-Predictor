@@ -159,7 +159,7 @@ def main():
             st.session_state["user_type"] = "Official User"
 
     # Public User Flow
-    if st.session_state["user_type"] == "Public User":
+    elif st.session_state["user_type"] == "Public User":
         public_user_section()
 
     # Official User Flow
