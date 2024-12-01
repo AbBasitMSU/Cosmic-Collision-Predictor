@@ -189,7 +189,7 @@ def main():
     # User Role Selection
     user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
-user_role == "Select User"
+if user_role == "Select User"
         select_user_section()
     if user_role == "Public User":
         public_user_section()
