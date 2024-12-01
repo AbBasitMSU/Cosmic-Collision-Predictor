@@ -106,7 +106,7 @@ def load_model():
         st.error("Model file not found!")
         st.stop()
     return tf.keras.models.load_model(model_path)
-        
+
 # Public User Section
 def public_user_section():
     st.header("Learn About Asteroids")
@@ -116,6 +116,7 @@ def public_user_section():
     """)
 
     st.subheader("Future Collisions Calendar")
+    st.write("Future collision probabilities will appear here (placeholder).")
     
     selected_date = st.date_input("Choose a Date")
 
@@ -182,9 +183,9 @@ def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
     # User Role Selection
-    user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
+    user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
 
-if user_role == "Public User":
+    if user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
         if "logged_in" not in st.session_state:
@@ -198,6 +199,7 @@ if user_role == "Public User":
                 login()
             elif choice == "Sign Up":
                 signup()
+
 # Run the app
 if __name__ == "__main__":
     main()
