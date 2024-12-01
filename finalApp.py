@@ -6,6 +6,7 @@ import hashlib
 import json
 import random
 from datetime import datetime
+import os
 
 # File to store user credentials
 CREDENTIALS_FILE = "users.json"
@@ -181,9 +182,10 @@ def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
     # User Role Selection
-    user_role = st.sidebar.selectbox("Who are you?", ["Public User", "Official User"])
+    user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
-    if user_role == "Public User":
+if user_role == "Select User":
+    elif user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
         if "logged_in" not in st.session_state:
