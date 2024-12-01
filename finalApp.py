@@ -98,7 +98,7 @@ def public_user_learn():
 
 def public_user_prediction():
     st.subheader("Collision Prediction Calendar")
-    st.write("Explore potential collision dates (fake data).")
+    st.write("Explore potential collision dates.")
     selected_date = st.date_input("Choose a Date")
 
     # Fake collision data
@@ -110,8 +110,8 @@ def public_user_prediction():
         st.write("Impact Area: 100 km radius")
         st.subheader("Precautions")
         st.write("""
-        1. Stay indoors and away from windows. If Possible go to the nearest Underground Bunker
-        2. Stock up on food, water, medicines and essentials.
+        1. Stay indoors and away from windows.
+        2. Stock up on food, water, and essentials.
         3. Follow local government advisories.
         """)
 
@@ -172,6 +172,7 @@ def main():
         if st.session_state["logged_in"]:
             official_user_section()
         else:
+            st.write("Sign Up or Log In")
             choice = st.radio("Choose an Option", ["Log In", "Sign Up"])
             if choice == "Log In":
                 login()
