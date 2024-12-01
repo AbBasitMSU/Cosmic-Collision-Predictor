@@ -184,13 +184,12 @@ def main():
     # User Role Selection
     user_role = st.sidebar.selectbox("Who are you?", ["Select User","Public User", "Official User"])
 
-
- if user_role == "Public User":
+if user_role == "Public User":
     public_user_section()
-    elif user_role == "Official User":
-        if "logged_in" not in st.session_state:
-            st.session_state["logged_in"] = False
-    
+elif user_role == "Official User":
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+        
         if st.session_state["logged_in"]:
             official_user_section()
         else:
