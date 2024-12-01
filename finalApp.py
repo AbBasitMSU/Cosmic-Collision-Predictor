@@ -5,6 +5,7 @@ import tensorflow as tf
 import hashlib
 import json
 import random
+from datetime import datetime
 
 # File to store user credentials
 CREDENTIALS_FILE = "users.json"
@@ -114,7 +115,6 @@ def public_user_section():
     """)
 
     st.subheader("Future Collisions Calendar")
-    st.write("Future collision probabilities will appear here (placeholder).")
     
     selected_date = st.date_input("Choose a Date")
 
