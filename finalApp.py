@@ -8,6 +8,8 @@ import random
 from datetime import datetime
 import os
 import h5py
+import requests
+from streamlit_lottie import st_lottie
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
@@ -52,8 +54,8 @@ def load_credentials():
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         # Handle the case where the file is not found or the JSON is invalid
-        st.warning("")
-        return{}
+        st.warning("Credentials file is missing or corrupted. Initializing a new one.")
+        return {}
 
 def save_credentials(credentials):
     with open(CREDENTIALS_FILE, "w") as file:
@@ -115,9 +117,33 @@ def load_model():
 def load_csv_data(filename):
     file_path = os.path.join("Original_Datasets", filename)
     if not os.path.exists(file_path):
-        st.error(f"File not found: {file_path}. Please ensure that the file exists in the 'Original_Datasets' folder.")
-        return pd.DataFrame()  # Return an empty DataFrame if the file is not found
+        # Attempt to load from GitHub if not found locally
+        try:
+            url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Original_Datasets/{filename}"
+            response = requests.get(url)
+            response.raise_for_status()
+            return pd.read_csv(url)
+        except requests.exceptions.RequestException:
+            st.error(f"File not found locally or on GitHub: {filename}. Please ensure the file is available.")
+            return pd.DataFrame()  # Return an empty DataFrame if the file is not found
     return pd.read_csv(file_path)
+
+# Function to Load Lottie Animations
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+# Sidebar Animation and Buttons
+def sidebar_interaction():
+    # Add a Lottie animation to make the sidebar more engaging
+    lottie_animation = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_jhxgwntr.json")
+    if lottie_animation:
+        st.sidebar_lottie(lottie_animation, speed=1, loop=True, height=200, key="sidebar")
+
+    st.sidebar.title("Asteroid Impact Predictor")
+    st.sidebar.write("Explore various features of the app below:")
 
 # Public User Section
 def public_user_section():
@@ -180,10 +206,16 @@ def official_user_section():
 
     if data_choice == "Raw Orbit Data":
         df = load_csv_data("cleaned_Asteroid_orbit.csv")
-        st.write(df)
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
     elif data_choice == "Raw Impact Data":
-        df = load_csv_data("impact_data.csv")  # Replace with actual file name if different
-        st.write(df)
+        df = load_csv_data("impact_data.csv")
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
 
     st.subheader("Detailed Analysis")
     analysis_choice = st.selectbox(
@@ -193,10 +225,16 @@ def official_user_section():
 
     if analysis_choice == "Impact Analysis":
         st.write("Performing Impact Analysis...")
+        # Code to render impact analysis
+        st.code("Impacts_Analysis.ipynb is used here for analysis.")
     elif analysis_choice == "Orbits Analysis":
         st.write("Performing Orbits Analysis...")
+        # Code to render orbits analysis
+        st.code("Orbits_Analysis.ipynb is used here for analysis.")
     elif analysis_choice == "Orbits vs Impacts Analysis":
         st.write("Performing Orbits vs Impacts Analysis...")
+        # Code to render orbits vs impacts analysis
+        st.code("Orbits_Vs_Impacts.ipynb is used here for analysis.")
 
     st.subheader("Train Models")
     if st.button("Train Impact Prediction Model"):
@@ -223,6 +261,9 @@ def official_user_section():
 def main():
     # Set the background image
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
+
+    # Add sidebar interactions
+    sidebar_interaction()
 
     # User Role Selection
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
