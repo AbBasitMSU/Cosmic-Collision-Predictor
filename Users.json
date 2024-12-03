@@ -1,28 +1,22 @@
-{}
-
 import streamlit as st
 import json
 import hashlib
-import requests
 
-# URL to store user credentials on GitHub
-CREDENTIALS_FILE_URL = "https://raw.githubusercontent.com/your_username/your_repo/main/users.json"
+# File to store user credentials
+CREDENTIALS_FILE = "users.json"
 
 # Load or initialize user credentials
 def load_credentials():
     try:
-        response = requests.get(CREDENTIALS_FILE_URL)
-        response.raise_for_status()
-        credentials = response.json()
-    except (requests.exceptions.RequestException, json.JSONDecodeError):
-        # If the file is not found, inaccessible, or is corrupted, initialize with an empty dictionary
+        with open(CREDENTIALS_FILE, "r") as file:
+            credentials = json.load(file)
+    except FileNotFoundError:
         credentials = {}
     return credentials
 
 def save_credentials(credentials):
-    # Since we cannot directly save to GitHub from the Streamlit app, provide instructions to update manually
-    st.warning("Saving credentials directly to GitHub is not supported. Please update the users.json file manually.")
-    st.json(credentials)
+    with open(CREDENTIALS_FILE, "w") as file:
+        json.dump(credentials, file)
 
 # Password hashing function
 def hash_password(password):
