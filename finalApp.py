@@ -9,7 +9,7 @@ from datetime import datetime
 import os
 
 # File to store user credentials
-CREDENTIALS_FILE = "users.json"
+CREDENTIALS_FILE = "Users.json"
 
 # Background Image Function
 def set_background(image_url):
@@ -50,6 +50,7 @@ def load_credentials():
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
     except FileNotFoundError:
+        st.error("User credentials file not found. Ensure 'Users.json' exists in the repository.")
         return {}
 
 def save_credentials(credentials):
@@ -101,11 +102,20 @@ def generate_random_location():
 # Function to Load Model
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model_path = "h5_Files/Asteroid_Impact_Model.h5"
+    model_path = os.path.join("h5_Files", "Asteroid_Impact_Model.h5")
     if not os.path.exists(model_path):
-        st.error("Model file not found!")
+        st.error(f"Model file not found at {model_path}. Ensure the file exists in 'h5_Files'.")
         st.stop()
     return tf.keras.models.load_model(model_path)
+
+# Function to Load CSV Data
+@st.cache
+def load_csv_data(filename):
+    file_path = os.path.join("Original_Datasets", filename)
+    if not os.path.exists(file_path):
+        st.error(f"File not found: {file_path}")
+        st.stop()
+    return pd.read_csv(file_path)
 
 # Public User Section
 def public_user_section():
@@ -159,9 +169,11 @@ def official_user_section():
     )
 
     if data_choice == "Raw Orbit Data":
-        st.write("Orbit data will appear here (placeholder).")
+        df = load_csv_data("cleaned_Asteroid_orbit.csv")
+        st.write(df)
     elif data_choice == "Raw Impact Data":
-        st.write("Impact data will appear here (placeholder).")
+        df = load_csv_data("impact_data.csv")  # Replace with actual file name if different
+        st.write(df)
 
     st.subheader("Detailed Analysis")
     analysis_choice = st.selectbox(
