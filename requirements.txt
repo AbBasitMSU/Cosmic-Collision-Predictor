@@ -5,3 +5,4 @@ tensorflow
 requests
 h5py
 streamlit-lottie
+os
