@@ -4,56 +4,61 @@ import numpy as np
 import tensorflow as tf
 import hashlib
 import json
-import requests
 import random
 from datetime import datetime
 import os
+import h5py
 
-# URL to store user credentials on GitHub
-CREDENTIALS_FILE_URL = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/users.json"
+# File to store user credentials
+CREDENTIALS_FILE = "Users.json"
 
-# Load or initialize user credentials
-def load_credentials():
-    try:
-        response = requests.get(CREDENTIALS_FILE_URL)
-        response.raise_for_status()
-        credentials = response.json()
-    except (requests.exceptions.RequestException, json.JSONDecodeError):
-        # If the file is not found, inaccessible, or is corrupted, initialize with an empty dictionary
-        credentials = {}
-    return credentials
-
-def save_credentials(credentials):
-    # Since we cannot directly save to GitHub from the Streamlit app, provide instructions to update manually
-    st.warning("Saving credentials directly to GitHub is not supported. Please update the users.json file manually.")
-    st.json(credentials)
+# Background Image Function
+def set_background(image_url):
+    """
+    Set a background image with CSS styling.
+    """
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: url("{image_url}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        .stApp::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4);
+            z-index: -1;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Password hashing function
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Signup function
-def signup():
-    st.subheader("Sign Up")
-    new_username = st.text_input("Choose a Username")
-    new_password = st.text_input("Choose a Password", type="password")
-    confirm_password = st.text_input("Confirm Password", type="password")
+# Load and save credentials
+def load_credentials():
+    try:
+        with open(CREDENTIALS_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        st.error("User credentials file not found. Ensure 'Users.json' exists in the repository.")
+        return {}
 
-    if st.button("Sign Up"):
-        if new_password != confirm_password:
-            st.error("Passwords do not match. Please try again.")
-            return
+def save_credentials(credentials):
+    with open(CREDENTIALS_FILE, "w") as file:
+        json.dump(credentials, file)
 
-        credentials = load_credentials()
-        if new_username in credentials:
-            st.error("Username already exists. Please choose another.")
-            return
-
-        credentials[new_username] = hash_password(new_password)
-        save_credentials(credentials)
-        st.success("Sign Up Successful! You can now log in.")
-
-# Login function
+# Login functionality
 def login():
     st.subheader("Log In")
     username = st.text_input("Username")
@@ -64,28 +69,99 @@ def login():
         hashed_password = hash_password(password)
 
         if username in credentials and credentials[username] == hashed_password:
-            st.success("Login Successful!")
+            st.success(f"Welcome, {username}!")
             st.session_state["logged_in"] = True
             st.session_state["username"] = username
         else:
             st.error("Invalid username or password.")
 
-# Function to Load CSV Data
-def load_csv_data(filename):
-    try:
-        file_path = os.path.join("Original_Datasets", filename)
-        if os.path.exists(file_path):
-            return pd.read_csv(file_path)
+# Signup functionality
+def signup():
+    st.subheader("Sign Up")
+    username = st.text_input("Choose a Username")
+    password = st.text_input("Choose a Password", type="password")
+    confirm_password = st.text_input("Confirm Password", type="password")
+
+    if st.button("Sign Up"):
+        if password != confirm_password:
+            st.error("Passwords do not match.")
         else:
-            # Optionally load from GitHub if the file is not found locally
-            csv_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Original_Datasets/{filename}"
-            response = requests.get(csv_url)
-            response.raise_for_status()
-            from io import StringIO
-            return pd.read_csv(StringIO(response.text))
-    except (FileNotFoundError, requests.exceptions.RequestException, pd.errors.EmptyDataError):
-        st.error(f"Error loading data from {filename}. Please ensure the file is available and accessible.")
-        return pd.DataFrame()
+            credentials = load_credentials()
+            if username in credentials:
+                st.error("Username already exists.")
+            else:
+                credentials[username] = hash_password(password)
+                save_credentials(credentials)
+                st.success("Sign up successful! You can now log in.")
+
+# Random Location Generator
+def generate_random_location():
+    latitude = round(random.uniform(-90, 90), 6)
+    longitude = round(random.uniform(-180, 180), 6)
+    return latitude, longitude
+
+# Function to Load Model
+@st.cache(allow_output_mutation=True)
+def load_model():
+    model_path = os.path.join("h5_Files", "Asteroid_Impact_Model.h5")
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found at {model_path}. Ensure the file exists in 'h5_Files'.")
+        st.stop()
+    return tf.keras.models.load_model(model_path)
+
+# Function to Load CSV Data
+@st.cache
+def load_csv_data(filename):
+    file_path = os.path.join("Original_Datasets", filename)
+    if not os.path.exists(file_path):
+        st.error(f"File not found: {file_path}")
+        st.stop()
+    return pd.read_csv(file_path)
+
+# Public User Section
+def public_user_section():
+    st.header("Learn About Asteroids")
+    st.write("""
+    Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
+    Learn how collisions are predicted and what precautions can be taken.
+    """)
+
+    st.subheader("Future Collisions Calendar")
+    selected_date = st.date_input("Choose a Date")
+
+    # Fake collision data
+    if selected_date == datetime(2024, 12, 10).date():
+        st.write("**Collision Alert!**")
+        st.write(f"Date: {selected_date}")
+        st.write("Location: Latitude 23.5, Longitude 78.9")
+        st.write("Impact Time: 14:30 UTC")
+        st.write("Impact Area: 100 km radius")
+        st.subheader("Precautions")
+        st.write("""
+        1. Stay indoors and away from windows.
+        2. Stock up on food, water, and essentials.
+        3. Follow local government advisories.
+        """)
+
+    st.subheader("Enter New Asteroid Details")
+    features = []
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+    features.extend([velocity, distance, angle, size])
+    for i in range(4, 40):
+        feature_value = st.number_input(f"Feature {i+1}", min_value=0.0, value=0.0, step=0.1)
+        features.append(feature_value)
+
+    if st.button("Predict Collision"):
+        input_data = np.array([features])
+        model = load_model()
+        prediction = model.predict(input_data)
+        impact_probability = prediction[0][0]
+        latitude, longitude = generate_random_location()
+        st.write(f"**Impact Probability:** {impact_probability:.2%}")
+        st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
 
 # Official User Section
 def official_user_section():
@@ -99,16 +175,10 @@ def official_user_section():
 
     if data_choice == "Raw Orbit Data":
         df = load_csv_data("cleaned_Asteroid_orbit.csv")
-        if not df.empty:
-            st.write(df)
-        else:
-            st.error("No data available to display.")
+        st.write(df)
     elif data_choice == "Raw Impact Data":
         df = load_csv_data("impact_data.csv")  # Replace with actual file name if different
-        if not df.empty:
-            st.write(df)
-        else:
-            st.error("No data available to display.")
+        st.write(df)
 
     st.subheader("Detailed Analysis")
     analysis_choice = st.selectbox(
@@ -128,11 +198,8 @@ def official_user_section():
         st.write("Training Impact Prediction Model...")
         # Load training data
         training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
-        if not training_data.empty:
-            # Model training logic would go here
-            st.write("Model training complete.")
-        else:
-            st.error("Training data not available.")
+        # Model training logic would go here
+        st.write("Model training complete.")
 
     st.subheader("Model Evaluation and Documentation")
     if st.button("Evaluate Existing Models"):
@@ -147,23 +214,28 @@ def official_user_section():
         # Display or provide link to documentation
         st.write("Detailed documentation goes here.")
 
-# Main function
+# Main Function
 def main():
-    st.title("Asteroid Impact Prediction App")
+    # Set the background image
+    set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
 
-    # Check login state
-    if "logged_in" not in st.session_state:
-        st.session_state["logged_in"] = False
+    # User Role Selection
+    user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
 
-    if st.session_state["logged_in"]:
-        official_user_section()
-    else:
-        choice = st.radio("Choose an option", ["Log In", "Sign Up"])
+    if user_role == "Public User":
+        public_user_section()
+    elif user_role == "Official User":
+        if "logged_in" not in st.session_state:
+            st.session_state["logged_in"] = False
 
-        if choice == "Log In":
-            login()
-        elif choice == "Sign Up":
-            signup()
+        if st.session_state["logged_in"]:
+            official_user_section()
+        else:
+            choice = st.sidebar.radio("Choose an Option", ["Log In", "Sign Up"])
+            if choice == "Log In":
+                login()
+            elif choice == "Sign Up":
+                signup()
 
 # Run the app
 if __name__ == "__main__":
