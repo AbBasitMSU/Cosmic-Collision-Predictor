@@ -109,15 +109,6 @@ def load_model():
         st.stop()
     return tf.keras.models.load_model(model_path)
 
-# Function to Load CSV Data
-@st.cache
-def load_csv_data(filename):
-    file_path = os.path.join("Original_Datasets", filename)
-    if not os.path.exists(file_path):
-        st.error(f"File not found: {file_path}")
-        st.stop()
-    return pd.read_csv(file_path)
-
 # Public User Section
 def public_user_section():
     st.header("Learn About Asteroids")
@@ -144,24 +135,28 @@ def public_user_section():
         """)
 
     st.subheader("Enter New Asteroid Details")
-    features = []
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
-    features.extend([velocity, distance, angle, size])
-    for i in range(4, 40):
-        feature_value = st.number_input(f"Feature {i+1}", min_value=0.0, value=0.0, step=0.1)
-        features.append(feature_value)
 
     if st.button("Predict Collision"):
-        input_data = np.array([features])
-        model = load_model()
-        prediction = model.predict(input_data)
-        impact_probability = prediction[0][0]
-        latitude, longitude = generate_random_location()
-        st.write(f"**Impact Probability:** {impact_probability:.2%}")
-        st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
+        # Custom logic for collision prediction
+        if velocity > 55.0 and distance < 150.0 and angle < 70.0 and size > 450.0:
+            latitude, longitude = generate_random_location()
+            possible_date = datetime(2024, 12, random.randint(1, 28)).date()
+            st.write("**Possible Collision Detected!**")
+            st.write(f"Date: {possible_date}")
+            st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
+            st.write("Impact Area: High Risk")
+            st.subheader("Precautions")
+            st.write("""
+            1. Stay indoors and away from windows.
+            2. Stock up on food, water, and essentials.
+            3. Follow local government advisories.
+            """)
+        else:
+            st.write("No significant collision risk detected based on the provided parameters.")
 
 # Official User Section
 def official_user_section():
