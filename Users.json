@@ -1,3 +1,5 @@
+{}
+
 import streamlit as st
 import json
 import hashlib
@@ -13,7 +15,7 @@ def load_credentials():
         response.raise_for_status()
         credentials = response.json()
     except (requests.exceptions.RequestException, json.JSONDecodeError):
-        # If the file is not found or is corrupted, initialize with an empty dictionary
+        # If the file is not found, inaccessible, or is corrupted, initialize with an empty dictionary
         credentials = {}
     return credentials
 
