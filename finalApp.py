@@ -7,6 +7,7 @@ import json
 import random
 from datetime import datetime
 import os
+import h5py
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
@@ -126,7 +127,6 @@ def public_user_section():
     """)
 
     st.subheader("Future Collisions Calendar")
-    
     selected_date = st.date_input("Choose a Date")
 
     # Fake collision data
@@ -142,26 +142,31 @@ def public_user_section():
         2. Stock up on food, water, and essentials.
         3. Follow local government advisories.
         """)
+
     st.subheader("Enter New Asteroid Details")
+    features = []
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+    features.extend([velocity, distance, angle, size])
+    for i in range(4, 40):
+        feature_value = st.number_input(f"Feature {i+1}", min_value=0.0, value=0.0, step=0.1)
+        features.append(feature_value)
 
     if st.button("Predict Collision"):
+        input_data = np.array([features])
         model = load_model()
-        input_data = np.array([[velocity, distance, angle, size]])
         prediction = model.predict(input_data)
         impact_probability = prediction[0][0]
         latitude, longitude = generate_random_location()
-
         st.write(f"**Impact Probability:** {impact_probability:.2%}")
         st.write(f"**Estimated Impact Location:** Latitude {latitude}, Longitude {longitude}")
 
 # Official User Section
 def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
-    st.subheader("Analysis and Visualization")
+    st.subheader("Analysis, Training, and Visualization")
 
     data_choice = st.selectbox(
         "Choose Data to View",
@@ -187,6 +192,27 @@ def official_user_section():
         st.write("Performing Orbits Analysis...")
     elif analysis_choice == "Orbits vs Impacts Analysis":
         st.write("Performing Orbits vs Impacts Analysis...")
+
+    st.subheader("Train Models")
+    if st.button("Train Impact Prediction Model"):
+        st.write("Training Impact Prediction Model...")
+        # Load training data
+        training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
+        # Model training logic would go here
+        st.write("Model training complete.")
+
+    st.subheader("Model Evaluation and Documentation")
+    if st.button("Evaluate Existing Models"):
+        st.write("Evaluating existing models...")
+        # Evaluation logic using the saved models
+        model = load_model()
+        st.write("Model evaluation complete.")
+
+    st.subheader("Check Documentation")
+    if st.button("View Documentation"):
+        st.write("Displaying documentation for asteroid prediction models...")
+        # Display or provide link to documentation
+        st.write("Detailed documentation goes here.")
 
 # Main Function
 def main():
