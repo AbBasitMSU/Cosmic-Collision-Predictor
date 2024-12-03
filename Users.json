@@ -10,8 +10,10 @@ def load_credentials():
     try:
         with open(CREDENTIALS_FILE, "r") as file:
             credentials = json.load(file)
-    except FileNotFoundError:
+    except (FileNotFoundError, json.JSONDecodeError):
+        # If the file is not found or is corrupted, initialize with an empty dictionary
         credentials = {}
+        save_credentials(credentials)  # Save the empty dictionary to create the file if it doesn't exist
     return credentials
 
 def save_credentials(credentials):
