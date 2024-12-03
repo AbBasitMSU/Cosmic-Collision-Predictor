@@ -10,7 +10,7 @@ import os
 import h5py
 
 # File to store user credentials
-CREDENTIALS_FILE = "Users.json"
+CREDENTIALS_FILE = "users.json"
 
 # Background Image Function
 def set_background(image_url):
@@ -51,7 +51,6 @@ def load_credentials():
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
     except FileNotFoundError:
-        st.error("User credentials file not found. Ensure 'Users.json' exists in the repository.")
         return {}
 
 def save_credentials(credentials):
@@ -93,7 +92,7 @@ def signup():
                 credentials[username] = hash_password(password)
                 save_credentials(credentials)
                 st.success("Sign up successful! You can now log in.")
-
+                
 # Random Location Generator
 def generate_random_location():
     latitude = round(random.uniform(-90, 90), 6)
