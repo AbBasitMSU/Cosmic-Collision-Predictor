@@ -115,8 +115,8 @@ def load_model():
 def load_csv_data(filename):
     file_path = os.path.join("Original_Datasets", filename)
     if not os.path.exists(file_path):
-        st.error(f"File not found: {file_path}")
-        st.stop()
+        st.error(f"File not found: {file_path}. Please ensure that the file exists in the 'Original_Datasets' folder.")
+        return pd.DataFrame()  # Return an empty DataFrame if the file is not found
     return pd.read_csv(file_path)
 
 # Public User Section
