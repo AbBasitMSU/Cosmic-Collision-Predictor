@@ -52,7 +52,7 @@ def load_credentials():
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         # Handle the case where the file is not found or the JSON is invalid
-        st.warning("User credentials file not found or invalid. Initializing an empty user database.")
+        st.warning("")
         return {}
 
 def save_credentials(credentials):
