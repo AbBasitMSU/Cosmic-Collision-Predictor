@@ -50,8 +50,9 @@ def load_credentials():
     try:
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
-    except FileNotFoundError:
-        st.error("User credentials file not found. Ensure 'Users.json' exists in the repository.")
+    except (FileNotFoundError, json.JSONDecodeError):
+        # Handle the case where the file is not found or the JSON is invalid
+        st.warning("User credentials file not found or invalid. Initializing an empty user database.")
         return {}
 
 def save_credentials(credentials):
