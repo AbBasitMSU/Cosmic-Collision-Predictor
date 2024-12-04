@@ -250,23 +250,23 @@ def official_user_section():
         else:
             st.write("No significant collision risk detected based on the provided parameters.")
 
-    st.subheader("Train Models")
-    if st.button("Train Impact Prediction Model"):
+    st.sidebar.header("Train Models")
+    if st.sidebar.button("Train Impact Prediction Model"):
         st.write("Training Impact Prediction Model...")
         # Load training data
         training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
         # Model training logic would go here
         st.write("Model training complete.")
 
-        st.subheader("Model Evaluation and Documentation")
-        if st.button("Evaluate Existing Models"):
+        st.sidebar.header("Model Evaluation and Documentation")
+        if st.sidebar.button("Evaluate Existing Models"):
             st.write("Evaluating existing models...")
             # Evaluation logic using the saved models
             model = load_model()
             st.write("Model evaluation complete.")
 
-        st.subheader("Check Documentation")
-        if st.button("View Documentation"):
+        st.sidebar.header("Check Documentation")
+        if st.sidebar.button("View Documentation"):
             st.write("Displaying documentation for asteroid prediction models...")
             # Display or provide link to documentation
             st.write("Detailed documentation goes here.")
