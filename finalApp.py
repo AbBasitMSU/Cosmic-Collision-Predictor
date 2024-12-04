@@ -230,7 +230,7 @@ def main():
     unsafe_allow_html=True
 )
 
-    st.subheader("
+    st.subheader("Learn and predict next colllision")
     st.sidebar.header("Navigation")
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
     if user_role == "Public User":
