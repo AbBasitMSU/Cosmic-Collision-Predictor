@@ -223,7 +223,7 @@ def official_user_section():
 # Main Function
 def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
-    st.sidebar.title("Asteroid Impact Predictor")
+    st.header("Asteroid Impact Predictor")
     st.sidebar.header("Navigation")
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
     if user_role == "Public User":
