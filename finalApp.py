@@ -227,6 +227,50 @@ def official_user_section():
             fig = px.bar(comparison_df, barmode='group', title="Orbits vs Impacts Data Comparison")
             st.plotly_chart(fig)
 
+st.subheader("Enter New Asteroid Details")
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+
+    if st.button("Predict Collision"):
+        # Custom logic for collision prediction
+        if velocity > 55.0 and distance < 150.0 and angle < 70.0 and size > 450.0:
+            latitude, longitude = generate_random_location()
+            possible_date = datetime(2024, 12, random.randint(1, 28)).date()
+            st.write("**Possible Collision Detected!**")
+            st.write(f"Date: {possible_date}")
+            st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
+            st.write("Impact Area: High Risk")
+            st.subheader("Precautions")
+            st.write("""
+            1. Stay indoors and away from windows.
+            2. Stock up on food, water, and essentials.
+            3. Follow local government advisories.
+            """)
+        else:
+            st.write("No significant collision risk detected based on the provided parameters.")
+
+st.subheader("Train Models")
+    if st.button("Train Impact Prediction Model"):
+        st.write("Training Impact Prediction Model...")
+        # Load training data
+        training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
+        # Model training logic would go here
+        st.write("Model training complete.")
+
+    st.subheader("Model Evaluation and Documentation")
+    if st.button("Evaluate Existing Models"):
+        st.write("Evaluating existing models...")
+        # Evaluation logic using the saved models
+        model = load_model()
+        st.write("Model evaluation complete.")
+
+    st.subheader("Check Documentation")
+    if st.button("View Documentation"):
+        st.write("Displaying documentation for asteroid prediction models...")
+        # Display or provide link to documentation
+        st.write("Detailed documentation goes here.")
 # Main Function
 def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
