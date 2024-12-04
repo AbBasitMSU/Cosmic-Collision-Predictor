@@ -117,7 +117,7 @@ def load_csv_data(filename):
         return pd.DataFrame()  # Return an empty DataFrame if the file is not found
 
 # Function to Extract and Run Code from Jupyter Notebooks
-@st.cache_resource
+@st.cache_data
 def extract_and_run_notebook(notebook_filename):
     github_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/{notebook_filename}"
     try:
@@ -128,11 +128,21 @@ def extract_and_run_notebook(notebook_filename):
         exporter = PythonExporter()
         python_script, _ = exporter.from_notebook_node(notebook)
 
-        # Run the script in the local context and capture key visualizations
+        # Remove problematic lines from the Python script (e.g., 'google.colab' imports)
+        cleaned_script = ""
+        for line in python_script.splitlines():
+            if "google.colab" not in line and "get_ipython()" not in line:
+                cleaned_script += line + "\n"
+
+        # Run the cleaned script in a local context
         local_context = {}
-        exec(python_script, local_context)
+        try:
+            exec(cleaned_script, local_context)
+        except Exception as e:
+            st.error(f"An error occurred while running the extracted notebook code: {str(e)}")
+
         return local_context
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
         st.error(f"Failed to load notebook: {notebook_filename}")
         return {}
 
