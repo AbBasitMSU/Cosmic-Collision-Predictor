@@ -6,4 +6,4 @@ requests
 h5py
 nbformat
 nbconvert
-streamlit-lottie
+streamlit-lotti
