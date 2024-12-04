@@ -58,6 +58,42 @@ def save_credentials(credentials):
     with open(CREDENTIALS_FILE, "w") as file:
         json.dump(credentials, file)
 
+# Login functionality
+def login():
+    st.subheader("Log In")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Log In"):
+        credentials = load_credentials()
+        hashed_password = hash_password(password)
+
+        if username in credentials and credentials[username] == hashed_password:
+            st.success(f"Welcome, {username}!")
+            st.session_state["logged_in"] = True
+            st.session_state["username"] = username
+        else:
+            st.error("Invalid username or password.")
+
+# Signup functionality
+def signup():
+    st.subheader("Sign Up")
+    username = st.text_input("Choose a Username")
+    password = st.text_input("Choose a Password", type="password")
+    confirm_password = st.text_input("Confirm Password", type="password")
+
+    if st.button("Sign Up"):
+        if password != confirm_password:
+            st.error("Passwords do not match.")
+        else:
+            credentials = load_credentials()
+            if username in credentials:
+                st.error("Username already exists.")
+            else:
+                credentials[username] = hash_password(password)
+                save_credentials(credentials)
+                st.success("Sign up successful! You can now log in.")
+
 # Function to Load CSV Data
 @st.cache
 def load_csv_data(filename):
