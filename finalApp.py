@@ -187,15 +187,21 @@ def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
     st.subheader("Analysis, Training, and Visualization")
 
-    data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Raw Impact Data"])
-    if data_choice == "Raw Orbit Data":
+    data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
+    if data_choice == "Cleaned Asteroid Data":
         df = load_csv_data("cleaned_Asteroid_orbit.csv")
         if not df.empty:
             st.write(df)
         else:
             st.error("No data available to display.")
+    elif data_choice == "Raw Orbit Data":
+        df = load_csv_data("orbits.csv")
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
     elif data_choice == "Raw Impact Data":
-        df = load_csv_data("impact_data.csv")
+        df = load_csv_data("impacts.csv")
         if not df.empty:
             st.write(df)
         else:
