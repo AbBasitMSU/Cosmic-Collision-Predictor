@@ -4,4 +4,7 @@ numpy
 tensorflow
 requests
 h5py
-streamlit-lottie
+nbformat
+nbconvert
+streamlit-lotti
+os
