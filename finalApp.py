@@ -9,16 +9,14 @@ from datetime import datetime
 import os
 import h5py
 import requests
-from streamlit_lottie import st_lottie
+import nbformat
+from nbconvert import PythonExporter
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
 
 # Background Image Function
 def set_background(image_url):
-    """
-    Set a background image with CSS styling.
-    """
     st.markdown(
         f"""
         <style>
@@ -53,7 +51,6 @@ def load_credentials():
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        # Handle the case where the file is not found or the JSON is invalid
         st.warning("Credentials file is missing or corrupted. Initializing a new one.")
         return {}
 
@@ -61,41 +58,43 @@ def save_credentials(credentials):
     with open(CREDENTIALS_FILE, "w") as file:
         json.dump(credentials, file)
 
-# Login functionality
-def login():
-    st.subheader("Log In")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+# Function to Load CSV Data
+@st.cache
+def load_csv_data(filename):
+    # Attempt to load from the local folder
+    file_path = os.path.join("Original_Datasets", filename)
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path)
+    
+    # If the local file does not exist, try loading from GitHub
+    github_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Original_Datasets/{filename}"
+    try:
+        response = requests.get(github_url)
+        response.raise_for_status()  # Check if the request was successful
+        return pd.read_csv(github_url)
+    except requests.exceptions.RequestException as e:
+        st.error(f"File not found: {filename}. Please ensure that the file exists locally or on GitHub.")
+        return pd.DataFrame()  # Return an empty DataFrame if the file is not found
 
-    if st.button("Log In"):
-        credentials = load_credentials()
-        hashed_password = hash_password(password)
+# Function to Extract and Run Code from Jupyter Notebooks
+@st.cache
+def extract_and_run_notebook(notebook_filename):
+    github_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/{notebook_filename}"
+    try:
+        response = requests.get(github_url)
+        response.raise_for_status()
+        notebook_content = response.text
+        notebook = nbformat.reads(notebook_content, as_version=4)
+        exporter = PythonExporter()
+        python_script, _ = exporter.from_notebook_node(notebook)
 
-        if username in credentials and credentials[username] == hashed_password:
-            st.success(f"Welcome, {username}!")
-            st.session_state["logged_in"] = True
-            st.session_state["username"] = username
-        else:
-            st.error("Invalid username or password.")
-
-# Signup functionality
-def signup():
-    st.subheader("Sign Up")
-    username = st.text_input("Choose a Username")
-    password = st.text_input("Choose a Password", type="password")
-    confirm_password = st.text_input("Confirm Password", type="password")
-
-    if st.button("Sign Up"):
-        if password != confirm_password:
-            st.error("Passwords do not match.")
-        else:
-            credentials = load_credentials()
-            if username in credentials:
-                st.error("Username already exists.")
-            else:
-                credentials[username] = hash_password(password)
-                save_credentials(credentials)
-                st.success("Sign up successful! You can now log in.")
+        # Run the script in the local context and capture key visualizations
+        local_context = {}
+        exec(python_script, local_context)
+        return local_context
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to load notebook: {notebook_filename}")
+        return {}
 
 # Random Location Generator
 def generate_random_location():
@@ -112,51 +111,13 @@ def load_model():
         st.stop()
     return tf.keras.models.load_model(model_path)
 
-# Function to Load CSV Data
-@st.cache
-def load_csv_data(filename):
-    file_path = os.path.join("Original_Datasets", filename)
-    if not os.path.exists(file_path):
-        # Attempt to load from GitHub if not found locally
-        try:
-            url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Original_Datasets/{filename}"
-            response = requests.get(url)
-            response.raise_for_status()
-            return pd.read_csv(url)
-        except requests.exceptions.RequestException:
-            st.error(f"File not found locally or on GitHub: {filename}. Please ensure the file is available.")
-            return pd.DataFrame()  # Return an empty DataFrame if the file is not found
-    return pd.read_csv(file_path)
-
-# Function to Load Lottie Animations
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-# Sidebar Animation and Buttons
-def sidebar_interaction():
-    # Add a Lottie animation to make the sidebar more engaging
-    lottie_animation = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_jhxgwntr.json")
-    if lottie_animation:
-        st.sidebar_lottie(lottie_animation, speed=1, loop=True, height=200, key="sidebar")
-
-    st.sidebar.title("Asteroid Impact Predictor")
-    st.sidebar.write("Explore various features of the app below:")
-
 # Public User Section
 def public_user_section():
     st.header("Learn About Asteroids")
-    st.write("""
-    Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat.
-    Learn how collisions are predicted and what precautions can be taken.
-    """)
-
+    st.write("Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat. Learn how collisions are predicted and what precautions can be taken.")
     st.subheader("Future Collisions Calendar")
     selected_date = st.date_input("Choose a Date")
-
-    # Fake collision data
+    
     if selected_date == datetime(2024, 12, 10).date():
         st.write("**Collision Alert!**")
         st.write(f"Date: {selected_date}")
@@ -164,11 +125,7 @@ def public_user_section():
         st.write("Impact Time: 14:30 UTC")
         st.write("Impact Area: 100 km radius")
         st.subheader("Precautions")
-        st.write("""
-        1. Stay indoors and away from windows.
-        2. Stock up on food, water, and essentials.
-        3. Follow local government advisories.
-        """)
+        st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
 
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
@@ -177,7 +134,6 @@ def public_user_section():
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
     if st.button("Predict Collision"):
-        # Custom logic for collision prediction
         if velocity > 55.0 and distance < 150.0 and angle < 70.0 and size > 450.0:
             latitude, longitude = generate_random_location()
             possible_date = datetime(2024, 12, random.randint(1, 28)).date()
@@ -186,11 +142,7 @@ def public_user_section():
             st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
             st.write("Impact Area: High Risk")
             st.subheader("Precautions")
-            st.write("""
-            1. Stay indoors and away from windows.
-            2. Stock up on food, water, and essentials.
-            3. Follow local government advisories.
-            """)
+            st.write("1. Stay indoors and away from windows,if possible try to go to nearby undergroud bunker.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
         else:
             st.write("No significant collision risk detected based on the provided parameters.")
 
@@ -199,11 +151,7 @@ def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
     st.subheader("Analysis, Training, and Visualization")
 
-    data_choice = st.selectbox(
-        "Choose Data to View",
-        ["Raw Orbit Data", "Raw Impact Data"]
-    )
-
+    data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Raw Impact Data"])
     if data_choice == "Raw Orbit Data":
         df = load_csv_data("cleaned_Asteroid_orbit.csv")
         if not df.empty:
@@ -218,62 +166,29 @@ def official_user_section():
             st.error("No data available to display.")
 
     st.subheader("Detailed Analysis")
-    analysis_choice = st.selectbox(
-        "Choose Analysis",
-        ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"]
-    )
-
+    analysis_choice = st.selectbox("Choose Analysis", ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"])
     if analysis_choice == "Impact Analysis":
+        local_context = extract_and_run_notebook("Impacts_Analysis.ipynb")
         st.write("Performing Impact Analysis...")
-        # Code to render impact analysis
-        st.code("Impacts_Analysis.ipynb is used here for analysis.")
+        # Add visualization or information if extracted from the context
     elif analysis_choice == "Orbits Analysis":
+        local_context = extract_and_run_notebook("Orbits_Analysis.ipynb")
         st.write("Performing Orbits Analysis...")
-        # Code to render orbits analysis
-        st.code("Orbits_Analysis.ipynb is used here for analysis.")
     elif analysis_choice == "Orbits vs Impacts Analysis":
+        local_context = extract_and_run_notebook("Orbits_Vs_Impacts.ipynb")
         st.write("Performing Orbits vs Impacts Analysis...")
-        # Code to render orbits vs impacts analysis
-        st.code("Orbits_Vs_Impacts.ipynb is used here for analysis.")
-
-    st.subheader("Train Models")
-    if st.button("Train Impact Prediction Model"):
-        st.write("Training Impact Prediction Model...")
-        # Load training data
-        training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
-        # Model training logic would go here
-        st.write("Model training complete.")
-
-    st.subheader("Model Evaluation and Documentation")
-    if st.button("Evaluate Existing Models"):
-        st.write("Evaluating existing models...")
-        # Evaluation logic using the saved models
-        model = load_model()
-        st.write("Model evaluation complete.")
-
-    st.subheader("Check Documentation")
-    if st.button("View Documentation"):
-        st.write("Displaying documentation for asteroid prediction models...")
-        # Display or provide link to documentation
-        st.write("Detailed documentation goes here.")
 
 # Main Function
 def main():
-    # Set the background image
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
-
-    # Add sidebar interactions
-    sidebar_interaction()
-
-    # User Role Selection
+    st.sidebar.title("Asteroid Impact Predictor")
+    st.sidebar.header("Navigation")
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
-
     if user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
         if "logged_in" not in st.session_state:
             st.session_state["logged_in"] = False
-
         if st.session_state["logged_in"]:
             official_user_section()
         else:
@@ -283,6 +198,5 @@ def main():
             elif choice == "Sign Up":
                 signup()
 
-# Run the app
 if __name__ == "__main__":
     main()
