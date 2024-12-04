@@ -6,7 +6,6 @@ requests
 h5py
 nbformat
 nbconvert
-streamlit-lottie
+plotly
 matplotlib
 seaborn
-scikit-learn
