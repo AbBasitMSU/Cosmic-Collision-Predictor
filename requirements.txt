@@ -9,3 +9,4 @@ nbconvert
 streamlit-lottie
 matplotlib
 seaborn
+google.colab
