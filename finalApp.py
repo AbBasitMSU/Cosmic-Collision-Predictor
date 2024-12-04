@@ -9,12 +9,9 @@ from datetime import datetime
 import os
 import h5py
 import requests
-import nbformat
-from nbconvert import PythonExporter
 import plotly.express as px
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
@@ -112,39 +109,9 @@ def load_csv_data(filename):
         response = requests.get(github_url)
         response.raise_for_status()  # Check if the request was successful
         return pd.read_csv(github_url)
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
         st.error(f"File not found: {filename}. Please ensure that the file exists locally or on GitHub.")
         return pd.DataFrame()  # Return an empty DataFrame if the file is not found
-
-# Function to Extract and Run Code from Jupyter Notebooks
-@st.cache_data
-def extract_and_run_notebook(notebook_filename):
-    github_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/{notebook_filename}"
-    try:
-        response = requests.get(github_url)
-        response.raise_for_status()
-        notebook_content = response.text
-        notebook = nbformat.reads(notebook_content, as_version=4)
-        exporter = PythonExporter()
-        python_script, _ = exporter.from_notebook_node(notebook)
-
-        # Remove problematic lines from the Python script (e.g., 'google.colab' imports)
-        cleaned_script = ""
-        for line in python_script.splitlines():
-            if "google.colab" not in line and "get_ipython()" not in line:
-                cleaned_script += line + "\n"
-
-        # Run the cleaned script in a local context
-        local_context = {}
-        try:
-            exec(cleaned_script, local_context)
-        except Exception as e:
-            st.error(f"An error occurred while running the extracted notebook code: {str(e)}")
-
-        return local_context
-    except requests.exceptions.RequestException as e:
-        st.error(f"Failed to load notebook: {notebook_filename}")
-        return {}
 
 # Random Location Generator
 def generate_random_location():
@@ -153,7 +120,7 @@ def generate_random_location():
     return latitude, longitude
 
 # Function to Load Model
-@st.cache_resource
+@st.cache_data
 def load_model():
     model_path = os.path.join("h5_Files", "Asteroid_Impact_Model.h5")
     if not os.path.exists(model_path):
@@ -192,7 +159,7 @@ def public_user_section():
             st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
             st.write("Impact Area: High Risk")
             st.subheader("Precautions")
-            st.write("1. Stay indoors and away from windows, if possible, try to go to a nearby underground bunker.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+            st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
         else:
             st.write("No significant collision risk detected based on the provided parameters.")
 
@@ -201,8 +168,8 @@ def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
     st.subheader("Analysis, Training, and Visualization")
 
-    # Data Viewing Section
     data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
+    
     if data_choice == "Cleaned Asteroid Data":
         df = load_csv_data("cleaned_Asteroid_orbit.csv")
         if not df.empty:
@@ -222,59 +189,52 @@ def official_user_section():
         else:
             st.error("No data available to display.")
 
-    # Detailed Analysis Section
     st.subheader("Detailed Analysis")
     analysis_choice = st.selectbox("Choose Analysis", ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"])
+    
+    # Analysis based on selected choice
     if analysis_choice == "Impact Analysis":
-        local_context = extract_and_run_notebook("Impacts_Analysis.ipynb")
-        if 'fig' in local_context:
-            st.plotly_chart(local_context['fig'])
         st.write("Performing Impact Analysis...")
+        # Simple Analysis Example - Histogram
+        impacts_df = load_csv_data("impacts.csv")
+        if not impacts_df.empty:
+            fig, ax = plt.subplots()
+            sns.histplot(impacts_df['Asteroid Magnitude'], ax=ax, bins=20, kde=True)
+            ax.set_title("Asteroid Magnitude Distribution")
+            ax.set_xlabel("Asteroid Magnitude")
+            st.pyplot(fig)
+
     elif analysis_choice == "Orbits Analysis":
-        local_context = extract_and_run_notebook("Orbits_Analysis.ipynb")
-        if 'fig' in local_context:
-            st.plotly_chart(local_context['fig'])
         st.write("Performing Orbits Analysis...")
+        # Scatter Plot Example
+        orbits_df = load_csv_data("orbits.csv")
+        if not orbits_df.empty:
+            fig = px.scatter(orbits_df, x='Orbit Eccentricity', y='Orbit Inclination (deg)', color='Object Classification',
+                             title="Orbit Eccentricity vs Inclination")
+            st.plotly_chart(fig)
+
     elif analysis_choice == "Orbits vs Impacts Analysis":
-        local_context = extract_and_run_notebook("Orbits_Vs_Impacts.ipynb")
-        if 'fig' in local_context:
-            st.plotly_chart(local_context['fig'])
         st.write("Performing Orbits vs Impacts Analysis...")
-
-    # Model Training Section
-    st.subheader("Train Models")
-    if st.button("Train Impact Prediction Model"):
-        st.write("Training Impact Prediction Model...")
-        training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
-        # Model training logic would go here
-        st.write("Model training complete.")
-
-    # Model Evaluation Section
-    st.subheader("Model Evaluation and Documentation")
-    if st.button("Evaluate Existing Models"):
-        st.write("Evaluating existing models...")
-        model = load_model()
-        st.write("Model evaluation complete.")
-
-    # Documentation Section
-    st.subheader("Check Documentation")
-    if st.button("View Documentation"):
-        st.write("Displaying documentation for asteroid prediction models...")
-        st.write("Detailed documentation goes here.")
+        # Combined Analysis Example
+        orbits_df = load_csv_data("orbits.csv")
+        impacts_df = load_csv_data("impacts.csv")
+        if not orbits_df.empty and not impacts_df.empty:
+            comparison_df = pd.DataFrame({
+                'Orbit Eccentricity': orbits_df['Orbit Eccentricity'].mean(),
+                'Orbit Inclination (deg)': orbits_df['Orbit Inclination (deg)'].mean(),
+                'Asteroid Magnitude': impacts_df['Asteroid Magnitude'].mean()
+            }, index=[0])
+            fig = px.bar(comparison_df, barmode='group', title="Orbits vs Impacts Data Comparison")
+            st.plotly_chart(fig)
 
 # Main Function
 def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
-    st.markdown(
-        """
-        <h1 style='text-align: center;'>Cosmic Collision Predictor</h1>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("<h1 style='text-align: center;'>Cosmic Collision Predictor</h1>", unsafe_allow_html=True)
 
-    # Sidebar Navigation
     st.sidebar.header("Navigation")
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
+    
     if user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
