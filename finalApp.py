@@ -132,7 +132,7 @@ def load_model():
 def public_user_section():
     st.sidebar.header("Learn About Asteroids")
     if st.sidebar.button("Learn"):
-        st.write("###**Here’s some information about asteroids, their origin, composition, and typical properties:**")
+        st.write("### **Here’s some information about asteroids, their origin, composition, and typical properties:**")
     
         st.write("### **What Are Asteroids?**")
         st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. They are sometimes referred to as minor planets or space rocks and are much smaller than planets. Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
@@ -387,7 +387,7 @@ def official_user_section():
         st.write("Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on Orbits data file")
         st.write("Impacts_vs_Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on combined file of Impacts data file and Otbits data file after merging")
         
-        st.write("##**Guide to the Project**")
+        st.write("## **Guide to the Project**")
 
         st.write("**Guidelines for the Project**")
 
@@ -410,7 +410,7 @@ def official_user_section():
         st.write("8: Supervised Learning model implementation")
         st.write("9: Confusion Matrix and Visualization")
         st.write("10: Compared observations and searched for improved accuracy for each model.")
-        st.write("##**References**")
+        st.write("## **References**")
 
         st.write("**References for the data source(s):**")
 
