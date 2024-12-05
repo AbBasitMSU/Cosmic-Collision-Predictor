@@ -254,25 +254,25 @@ def official_user_section():
     # Train Models Section
     st.subheader("Train Models")
 
-        if st.button("Train Impact Prediction Model"):
-            # Display initial status
-            st.write("Training model started...")
+    if st.button("Train Impact Prediction Model"):
+        # Display initial status
+        st.write("Training model started...")
 
-            # Placeholder for updating progress
-            placeholder = st.empty()  # Empty placeholder to update text during the loop
+        # Placeholder for updating progress
+        placeholder = st.empty()  # Empty placeholder to update text during the loop
 
-            # Simulate training with 100 epochs (replace this with actual training logic)
-            for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
-                time.sleep(0.1)  # Simulate a short delay (adjust time as needed)
-                placeholder.text(f"Epoch {epoch}/100...")
+        # Simulate training with 100 epochs (replace this with actual training logic)
+        for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
+            time.sleep(0.10)  # Simulate a short delay (adjust time as needed)
+            placeholder.text(f"Epoch {epoch}/100...")
 
-            # Update to show training completion
-            placeholder.text("Model Training Completed!")
+        # Update to show training completion
+        placeholder.text("Model Training Completed!")
 
-            # Show the final result text and display the result image
-            placeholder.text("Result:")
-            github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/results/impact_model_result.png"
-            st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
+        # Show the final result text and display the result image
+        placeholder.text("Result:")
+        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/results/impact_model_result.png"
+        st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
             
     st.subheader("Model Evaluation and Documentation")
     if st.button("Evaluate Existing Models"):
