@@ -134,7 +134,7 @@ def public_user_section():
     st.subheader("Here’s some information about asteroids, their origin, composition, and typical properties:")
     
     st.write("### **What Are Asteroids?**")
-        st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. \n They are sometimes referred to as minor planets, or "space rocks" and are much smaller than planets. \n Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
+    st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. \n They are sometimes referred to as minor planets, or "space rocks" and are much smaller than planets. \n Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
     
     st.write("### **How Are Asteroids Made?**")
     st.write("Asteroids are thought to be the leftover building blocks of planets, called **planetesimals**, that never quite made it to full planet status. During the early stages of the solar system, dust and gas accumulated into larger clumps, eventually forming planets. However, in some areas like the asteroid belt, the gravitational influence of Jupiter was too strong, preventing these clumps from becoming full-fledged planets. Instead, they remained in their smaller form, as rocky asteroids.")
@@ -143,19 +143,19 @@ def public_user_section():
     st.write("The composition of asteroids varies widely, depending on where they were formed:")
     
     st.write("1. **C-Type (Carbonaceous) Asteroids**:") 
-       st.write("- These are the most common, making up around 75% of known asteroids.")
-       st.write("- They are rich in carbon, giving them a dark appearance.")
-       st.write("- Found primarily in the outer regions of the asteroid belt.")
+    st.write("- These are the most common, making up around 75% of known asteroids.")
+    st.write("- They are rich in carbon, giving them a dark appearance.")
+    st.write("- Found primarily in the outer regions of the asteroid belt.")
    
     st.write("2. **S-Type (Silicaceous) Asteroids**:") 
-       st.write("- Make up around 17% of known asteroids.")
-       st.write("- Composed primarily of silicate materials and nickel-iron.")
-       st.write("- Typically found in the inner asteroid belt.")
+    st.write("- Make up around 17% of known asteroids.")
+    st.write("- Composed primarily of silicate materials and nickel-iron.")
+    st.write("- Typically found in the inner asteroid belt.")
    
     st.write("3. **M-Type (Metallic) Asteroids**:") 
-       st.write("- Make up the remaining types.")
-       st.write("- Rich in nickel and iron, giving them a metallic composition.")
-       st.write("- Found in the middle of the asteroid belt.")
+    st.write("- Make up the remaining types.")
+    st.write("- Rich in nickel and iron, giving them a metallic composition.")
+    st.write("- Found in the middle of the asteroid belt.")
 
     st.write("### **General Characteristics of Asteroids**")
     st.write("- **Size**: Asteroids vary widely in size, from a few meters to hundreds of kilometers in diameter. The largest known asteroid is **Ceres**, which is about 940 km (about 580 miles) in diameter and is also classified as a dwarf planet.")
@@ -163,7 +163,7 @@ def public_user_section():
     st.write("- **Shape**: Most asteroids are irregularly shaped because they lack sufficient gravity to form a perfect sphere. Some look like lumpy rocks, while others have strange, elongated shapes.")
 
     st.write("- **Speed**: Asteroids orbit the Sun at different speeds, depending on their distance from the Sun. On average, asteroids move at speeds of **25,000 to 75,000 km/h (15,500 to 46,500 mph)**. However, their speed can vary greatly:")
-      st.write("- The relative speed of an asteroid approaching Earth can reach up to **30 km/s (about 108,000 km/h or 67,000 mph)**.")
+    st.write("- The relative speed of an asteroid approaching Earth can reach up to **30 km/s (about 108,000 km/h or 67,000 mph)**.")
 
     st.write("- **Orbit**: Asteroids typically have elliptical (oval-shaped) orbits, and most are found in the **main asteroid belt** between Mars and Jupiter. Some asteroids, however, have orbits that bring them closer to Earth, and they are called **Near-Earth Asteroids (NEAs)**.")
 
@@ -171,14 +171,14 @@ def public_user_section():
     st.write("1. **Impact History**: Asteroids have impacted planets, including Earth, throughout history. It is widely believed that an asteroid impact led to the extinction of the dinosaurs around 66 million years ago. The impact likely caused widespread fires, blocked sunlight, and disrupted ecosystems.")
 
     st.write("2. **Missions to Asteroids**:")
-       st.write("- **NASA's OSIRIS-REx** visited the asteroid **Bennu** in 2018, collected a sample, and returned it to Earth in 2023. Bennu is a carbon-rich asteroid that could provide information about the early solar system and the origin of life.")
-       st.write("- The Japanese space agency **JAXA** launched **Hayabusa2**, which visited the asteroid **Ryugu** and returned samples to Earth in 2020.")
+    st.write("- **NASA's OSIRIS-REx** visited the asteroid **Bennu** in 2018, collected a sample, and returned it to Earth in 2023. Bennu is a carbon-rich asteroid that could provide information about the early solar system and the origin of life.")
+    st.write("- The Japanese space agency **JAXA** launched **Hayabusa2**, which visited the asteroid **Ryugu** and returned samples to Earth in 2020.")
 
     st.write("3. **Potential Resources**: Asteroids may also hold valuable resources like **iron, nickel, cobalt**, and even **water**. Scientists have discussed the possibility of **mining asteroids** in the future, especially for use in space exploration.")
 
     st.write("4. **Trojans and Family Groups**:")
-       st.write("- **Trojan asteroids** are found in **Jupiter's orbit**, trapped in stable regions called Lagrange points. Other planets, including Earth and Mars, also have Trojan asteroids.")
-       st.write("- Asteroids that share similar orbits and composition are sometimes referred to as **asteroid families**, which may have originated from the same parent body due to a collision.")
+    st.write("- **Trojan asteroids** are found in **Jupiter's orbit**, trapped in stable regions called Lagrange points. Other planets, including Earth and Mars, also have Trojan asteroids.")
+    st.write("- Asteroids that share similar orbits and composition are sometimes referred to as **asteroid families**, which may have originated from the same parent body due to a collision.")
 
     st.write("### **Asteroids vs. Comets**")
     st.write("- **Asteroids** are composed mostly of rock and metal, and they do not have tails.")
