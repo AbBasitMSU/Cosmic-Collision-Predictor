@@ -278,7 +278,7 @@ def official_user_section():
         github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.jpg"
         st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
     
-    st.subheader("Model Evaluation and Documentation")
+    st.subheader("Model Evaluation")
     if st.button("Evaluate Existing Models"):
         st.write("Evaluating existing models...")
         # Evaluation logic using the saved models
