@@ -52,10 +52,7 @@ def load_credentials():
     try:
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        st.warning("Credentials file is missing or corrupted. Initializing a new one.")
-        return {}
-
+    
 def save_credentials(credentials):
     with open(CREDENTIALS_FILE, "w") as file:
         json.dump(credentials, file)
@@ -167,7 +164,7 @@ def public_user_section():
 # Official User Section
 def official_user_section():
     st.header(f"Welcome, {st.session_state['username']}")
-    st.subheader("Analysis, Training, and Visualization")
+    st.subheader("Analysis, and Visualization")
 
     data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
     
