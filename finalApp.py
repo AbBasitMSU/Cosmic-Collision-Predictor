@@ -330,7 +330,7 @@ def official_user_section():
 
         # Simulate training with 100 epochs (replace this with actual training logic)
         for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
-            time.sleep(1.0)  # Simulate a short delay (adjust time as needed)
+            time.sleep(0.6)  # Simulate a short delay (adjust time as needed)
             epoch_placeholder.text(f"Epoch {epoch}/100...")
 
         # After all epochs are complete, clear the epoch placeholder and update the status placeholder
