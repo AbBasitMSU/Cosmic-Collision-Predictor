@@ -134,7 +134,7 @@ def public_user_section():
     st.subheader("Here’s some information about asteroids, their origin, composition, and typical properties:")
     
     st.write("### **What Are Asteroids?**")
-    st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. \n They are sometimes referred to as minor planets, or "space rocks" and are much smaller than planets. \n Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
+    st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. They are sometimes referred to as minor planets or space rocks and are much smaller than planets. Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
     
     st.write("### **How Are Asteroids Made?**")
     st.write("Asteroids are thought to be the leftover building blocks of planets, called **planetesimals**, that never quite made it to full planet status. During the early stages of the solar system, dust and gas accumulated into larger clumps, eventually forming planets. However, in some areas like the asteroid belt, the gravitational influence of Jupiter was too strong, preventing these clumps from becoming full-fledged planets. Instead, they remained in their smaller form, as rocky asteroids.")
