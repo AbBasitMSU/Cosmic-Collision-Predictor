@@ -130,8 +130,8 @@ def load_model():
 
 # Public User Section
 def public_user_section():
-    st.header("Learn About Asteroids")
-    st.subheader("Here’s some information about asteroids, their origin, composition, and typical properties:")
+    st.sidebar.header("Learn About Asteroids")
+    st.write("###**Here’s some information about asteroids, their origin, composition, and typical properties:**")
     
     st.write("### **What Are Asteroids?**")
     st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. They are sometimes referred to as minor planets or space rocks and are much smaller than planets. Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
@@ -196,7 +196,7 @@ def public_user_section():
 
     st.write("Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     
-    st.sidebar.header("Future Collisions Calendar")
+    st.header("Future Collisions Calendar")
     selected_date = st.date_input("Choose a Date")
     
     if selected_date == datetime(2024, 12, 10).date():
@@ -214,7 +214,7 @@ def public_user_section():
     angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
-    if st.sidebar.button("Predict Collision"):
+    if st.button("Predict Collision"):
         if velocity > 55.0 and distance < 150.0 and angle < 70.0 and size > 450.0:
             latitude, longitude = generate_random_location()
             possible_date = datetime(2024, 12, random.randint(1, 28)).date()
