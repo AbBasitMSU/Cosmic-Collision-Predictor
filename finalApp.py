@@ -198,7 +198,6 @@ def public_user_section():
         st.write("Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     
     st.header("Future Collisions Calendar")
-    if st.button("Calendar"):
         selected_date = st.date_input("Choose a Date")
     
     if selected_date == datetime(2024, 12, 10).date():
