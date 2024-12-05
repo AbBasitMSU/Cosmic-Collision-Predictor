@@ -264,10 +264,6 @@ if st.button("Train Impact Prediction Model"):
         time.sleep(1)  # Sleep for 1 second for demonstration
         placeholder.text(f"Step {i+1} of 5...")
 
-    # Load training data
-    training_data = load_csv_data("cleaned_Asteroid_data.csv")
-    # Here, you would put your actual model training logic
-
     # Indicate training completion
     placeholder.text("Model Training Complete!")
     
