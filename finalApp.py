@@ -313,7 +313,7 @@ def official_user_section():
 
     st.sidebar.header("Check Documentation")
     if st.sidebar.button("View Documentation"):
-        st.write("Displaying documentation for asteroid predictor...")
+        st.write("**Displaying documentation for asteroid predictor...**")
         st.write("Original_Datasets: \n impacts.csv \n orbits.csv \n cleaned_Asteroid_orbit.csv <-- csv file created via Jupyter Notebook after data was cleaned prior to creating the ML models (NN model version) \n h5_Files \n Asteroid_Impact_Model.h5 \n Asteroid_Impact_Optimization_Model.h5 \n Asteroid definitions.pptx <-- Powerpoint presentation Intro to the project and definitions of the different columns in the dataset. \n Asteroid_Predictions.ipynb <-- File started in Jupyter Notebook for data cleanup prior to Neural Network ML training \n Asteroid_Predictions_Colab.ipynb <-- File worked on via Google Colab after cleanup, to train our Neural Network ML model prior to optimization. \n Asteroid_Predictions_Optimization_Colab.ipynb <-- File worked on via Google Colab. Optimized version after training our Neural Network ML model.")
         st.write("asteroid-impact-prediction-SL-CFM.ipynb <-- File worked on via Jupyter Notebook for Supervised Learning, with unbalanced data.")
         st.write("asteroid_impact-prediction-SL-OverSample.ipynb <-- File worked on via Jupyter Notebook for SL, with OverSampling of the data.")
