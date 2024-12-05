@@ -258,18 +258,18 @@ def official_user_section():
         # Model training logic would go here
         st.write("Model training complete.")
 
-        st.subheader("Model Evaluation and Documentation")
-        if st.button("Evaluate Existing Models"):
-            st.write("Evaluating existing models...")
-            # Evaluation logic using the saved models
-            model = load_model()
-            st.write("Model evaluation complete.")
+    st.subheader("Model Evaluation and Documentation")
+    if st.button("Evaluate Existing Models"):
+        st.write("Evaluating existing models...")
+        # Evaluation logic using the saved models
+        model = load_model()
+        st.write("Model evaluation complete.")
 
-        st.subheader("Check Documentation")
-        if st.button("View Documentation"):
-            st.write("Displaying documentation for asteroid prediction models...")
-            # Display or provide link to documentation
-            st.write("Detailed documentation goes here.")
+    st.subheader("Check Documentation")
+    if st.button("View Documentation"):
+        st.write("Displaying documentation for asteroid prediction models...")
+        # Display or provide link to documentation
+        st.write("Detailed documentation goes here.")
 
 # Main Function
 def main():
