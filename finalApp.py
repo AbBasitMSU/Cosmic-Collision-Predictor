@@ -12,6 +12,7 @@ import requests
 import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
+import time
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
@@ -250,13 +251,29 @@ def official_user_section():
         else:
             st.write("No significant collision risk detected based on the provided parameters.")
 
-    st.subheader("Train Models")
-    if st.button("Train Impact Prediction Model"):
-        st.write("Training Impact Prediction Model...")
-        # Load training data
-        training_data = load_csv_data("cleaned_Asteroid_data.csv")
-        # Model training logic would go here
-        st.write("Model training complete.")
+    # Train Models Section
+st.subheader("Train Models")
+
+if st.button("Train Impact Prediction Model"):
+    # Show progress and start the training
+    st.write("Training Impact Prediction Model... Please wait.")
+    placeholder = st.empty()  # Placeholder for progress updates
+
+    # Simulate model training with a sleep function (replace this with actual training code)
+    for i in range(5):  # This simulates training with 5 steps
+        time.sleep(1)  # Sleep for 1 second for demonstration
+        placeholder.text(f"Step {i+1} of 5...")
+
+    # Load training data
+    training_data = load_csv_data("cleaned_Asteroid_data.csv")
+    # Here, you would put your actual model training logic
+
+    # Indicate training completion
+    placeholder.text("Model Training Complete!")
+    
+    # Display image from GitHub after training is complete
+    github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy_of_NN_Model.png"
+    st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
 
     st.subheader("Model Evaluation and Documentation")
     if st.button("Evaluate Existing Models"):
