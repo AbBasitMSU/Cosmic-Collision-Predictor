@@ -130,8 +130,8 @@ def load_model():
 
 # Public User Section
 def public_user_section():
-    st.sidebar.header("Learn About Asteroids")
-    st.write("###**Here’s some information about asteroids, their origin, composition, and typical properties:**")
+    st.sidebar.button("Learn About Asteroids")
+    st.write.subheader("###**Here’s some information about asteroids, their origin, composition, and typical properties:**")
     
     st.write("### **What Are Asteroids?**")
     st.write("Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. They are sometimes referred to as minor planets or space rocks and are much smaller than planets. Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.")
