@@ -263,6 +263,15 @@ def official_user_section():
         st.write("Evaluating existing models...")
         # Evaluation logic using the saved models
         model = load_model()
+        # Create a DataFrame containing training history
+        history_df = pd.DataFrame(fit_model.history)
+
+        # Increase the index by 1 to match the number of epochs
+        history_df.index += 1
+
+        # Plot the loss
+        history_df.plot(y="loss")
+        st.plt.show()
         st.write("Model evaluation complete.")
 
     st.subheader("Check Documentation")
