@@ -254,7 +254,7 @@ def official_user_section():
     if st.sidebar.button("Train Impact Prediction Model"):
         st.write("Training Impact Prediction Model...")
         # Load training data
-        training_data = load_csv_data("cleaned_Asteroid_orbit.csv")
+        training_data = load_csv_data(file_path)
         # Model training logic would go here
         st.write("Model training complete.")
 
