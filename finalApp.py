@@ -199,16 +199,16 @@ def public_user_section():
     
     st.sidebar.header("Future Collisions Calendar")
     if sidebar.button("Calendar"):
-    selected_date = st.date_input("Choose a Date")
+        selected_date = st.date_input("Choose a Date")
     
-    if selected_date == datetime(2024, 12, 10).date():
-        st.write("**Collision Alert!**")
-        st.write(f"Date: {selected_date}")
-        st.write("Location: Latitude 23.5, Longitude 78.9")
-        st.write("Impact Time: 14:30 UTC")
-        st.write("Impact Area: 100 km radius")
-        st.subheader("Precautions")
-        st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+        if selected_date == datetime(2024, 12, 10).date():
+            st.write("**Collision Alert!**")
+            st.write(f"Date: {selected_date}")
+            st.write("Location: Latitude 23.5, Longitude 78.9")
+            st.write("Impact Time: 14:30 UTC")
+            st.write("Impact Area: 100 km radius")
+            st.subheader("Precautions")
+            st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
 
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
