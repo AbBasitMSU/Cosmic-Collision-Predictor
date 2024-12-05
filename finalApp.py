@@ -131,7 +131,69 @@ def load_model():
 # Public User Section
 def public_user_section():
     st.header("Learn About Asteroids")
-    st.write("Asteroids are rocky bodies orbiting the Sun. Some come close to Earth and may pose a threat. Learn how collisions are predicted and what precautions can be taken.")
+    st.write("Sure! Here’s some information about asteroids, their origin, composition, and typical properties:
+
+### **What Are Asteroids?**
+Asteroids are rocky remnants left over from the early formation of our solar system around 4.6 billion years ago. They are sometimes referred to as minor planets or "space rocks" and are much smaller than planets. Unlike comets, which are made of ice and dust, asteroids are made primarily of rock and metals. Most asteroids are found in the **Asteroid Belt**, a region between Mars and Jupiter where millions of these bodies orbit the Sun.
+
+### **How Are Asteroids Made?**
+Asteroids are thought to be the leftover building blocks of planets, called **planetesimals**, that never quite made it to full planet status. During the early stages of the solar system, dust and gas accumulated into larger clumps, eventually forming planets. However, in some areas like the asteroid belt, the gravitational influence of Jupiter was too strong, preventing these clumps from becoming full-fledged planets. Instead, they remained in their smaller form, as rocky asteroids.
+
+### **Composition of Asteroids**
+The composition of asteroids varies widely, depending on where they were formed:
+1. **C-Type (Carbonaceous) Asteroids**: 
+   - These are the most common, making up around 75% of known asteroids.
+   - They are rich in carbon, giving them a dark appearance.
+   - Found primarily in the outer regions of the asteroid belt.
+   
+2. **S-Type (Silicaceous) Asteroids**: 
+   - Make up around 17% of known asteroids.
+   - Composed primarily of silicate materials and nickel-iron.
+   - Typically found in the inner asteroid belt.
+   
+3. **M-Type (Metallic) Asteroids**: 
+   - Make up the remaining types.
+   - Rich in nickel and iron, giving them a metallic composition.
+   - Found in the middle of the asteroid belt.
+
+### **General Characteristics of Asteroids**
+- **Size**: Asteroids vary widely in size, from a few meters to hundreds of kilometers in diameter. The largest known asteroid is **Ceres**, which is about 940 km (about 580 miles) in diameter and is also classified as a dwarf planet.
+  
+- **Shape**: Most asteroids are irregularly shaped because they lack sufficient gravity to form a perfect sphere. Some look like lumpy rocks, while others have strange, elongated shapes.
+
+- **Speed**: Asteroids orbit the Sun at different speeds, depending on their distance from the Sun. On average, asteroids move at speeds of **25,000 to 75,000 km/h (15,500 to 46,500 mph)**. However, their speed can vary greatly:
+  - The relative speed of an asteroid approaching Earth can reach up to **30 km/s (about 108,000 km/h or 67,000 mph)**.
+
+- **Orbit**: Asteroids typically have elliptical (oval-shaped) orbits, and most are found in the **main asteroid belt** between Mars and Jupiter. Some asteroids, however, have orbits that bring them closer to Earth, and they are called **Near-Earth Asteroids (NEAs)**.
+
+### **Interesting Facts About Asteroids**
+1. **Impact History**: Asteroids have impacted planets, including Earth, throughout history. It is widely believed that an asteroid impact led to the extinction of the dinosaurs around 66 million years ago. The impact likely caused widespread fires, blocked sunlight, and disrupted ecosystems.
+
+2. **Missions to Asteroids**:
+   - **NASA's OSIRIS-REx** visited the asteroid **Bennu** in 2018, collected a sample, and returned it to Earth in 2023. Bennu is a carbon-rich asteroid that could provide information about the early solar system and the origin of life.
+   - The Japanese space agency **JAXA** launched **Hayabusa2**, which visited the asteroid **Ryugu** and returned samples to Earth in 2020.
+
+3. **Potential Resources**: Asteroids may also hold valuable resources like **iron, nickel, cobalt**, and even **water**. Scientists have discussed the possibility of **mining asteroids** in the future, especially for use in space exploration.
+
+4. **Trojans and Family Groups**:
+   - **Trojan asteroids** are found in **Jupiter's orbit**, trapped in stable regions called Lagrange points. Other planets, including Earth and Mars, also have Trojan asteroids.
+   - Asteroids that share similar orbits and composition are sometimes referred to as **asteroid families**, which may have originated from the same parent body due to a collision.
+
+### **Asteroids vs. Comets**
+- **Asteroids** are composed mostly of rock and metal, and they do not have tails.
+- **Comets** are made of ice, dust, and organic compounds. When they get close to the Sun, the heat causes their icy nuclei to vaporize, creating a **glowing coma** and **tail**.
+
+### **Hazardous Asteroids**
+- Some asteroids are classified as **Potentially Hazardous Asteroids (PHAs)** if they come within **0.05 astronomical units (AU)** of Earth's orbit and are larger than **140 meters** in diameter.
+- NASA and other space agencies continuously monitor **Near-Earth Objects (NEOs)**, including asteroids, to ensure that they do not pose a significant threat to Earth.
+
+### **Famous Asteroids**
+1. **Ceres**: The largest object in the asteroid belt and the first asteroid discovered (in 1801).
+2. **Vesta**: One of the largest asteroids, known for having a differentiated structure similar to a planet, including a core, mantle, and crust.
+3. **Eros**: A near-Earth asteroid that was visited by NASA's **NEAR Shoemaker** spacecraft in 2000, providing a wealth of information about its surface and composition.
+4. **Apophis**: Initially thought to be a potentially hazardous asteroid, Apophis will make a close flyby of Earth in 2029, but it has been ruled out as a collision risk.
+
+Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     st.subheader("Future Collisions Calendar")
     selected_date = st.date_input("Choose a Date")
     
