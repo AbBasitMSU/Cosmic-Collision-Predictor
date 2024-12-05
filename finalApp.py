@@ -252,31 +252,31 @@ def official_user_section():
             st.write("No significant collision risk detected based on the provided parameters.")
 
     # Train Models Section
-st.subheader("Train Models")
+    st.subheader("Train Models")
 
-if st.button("Train Impact Prediction Model"):
-    # Create a placeholder for the entire training status
-    status_placeholder = st.empty()
+    if st.button("Train Impact Prediction Model"):
+        # Create a placeholder for the entire training status
+        status_placeholder = st.empty()
 
-    # Display initial status
-    status_placeholder.write("Training model started...")
+        # Display initial status
+        status_placeholder.write("Training model started...")
 
-    # Placeholder for updating epoch progress
-    epoch_placeholder = st.empty()
+        # Placeholder for updating epoch progress
+        epoch_placeholder = st.empty()
 
-    # Simulate training with 100 epochs (replace this with actual training logic)
-    for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
-        time.sleep(1.0)  # Simulate a short delay (adjust time as needed)
-        epoch_placeholder.text(f"Epoch {epoch}/100...")
+        # Simulate training with 100 epochs (replace this with actual training logic)
+        for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
+            time.sleep(1.0)  # Simulate a short delay (adjust time as needed)
+            epoch_placeholder.text(f"Epoch {epoch}/100...")
 
-    # After all epochs are complete, clear the epoch placeholder and update the status placeholder
-    epoch_placeholder.empty()  # Remove the epoch progress text
-    status_placeholder.write("Model Training Completed!")
+        # After all epochs are complete, clear the epoch placeholder and update the status placeholder
+        epoch_placeholder.empty()  # Remove the epoch progress text
+        status_placeholder.write("Model Training Completed!")
 
-    # Show the final result text and display the result image
-    st.write("Result:")
-    github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/results/impact_model_result.png"
-    st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
+        # Show the final result text and display the result image
+        st.write("Result:")
+        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/results/impact_model_result.png"
+        st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
     
     st.subheader("Model Evaluation and Documentation")
     if st.button("Evaluate Existing Models"):
