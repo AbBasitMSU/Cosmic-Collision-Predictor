@@ -299,7 +299,7 @@ def official_user_section():
         st.write("Graduate and attain employment from utilizing our knowlwdge acquired from this class")
         st.write("Processes used")
 
-        st.write("Reading the csv files')
+        st.write("Reading the csv files")
         st.write("Cleaning the data")
         st.write("Normalize and stabalize the data")
         st.write("Splitting the data")
