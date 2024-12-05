@@ -254,7 +254,7 @@ def official_user_section():
     # Train Models Section
 st.subheader("Train Models")
 
-if st.sidebutton("Train Impact Prediction Model"):
+if st.subheader("Train Impact Prediction Model"):
     # Show progress and start the training
     st.write("Training Impact Prediction Model... Please wait.")
     placeholder = st.empty()  # Placeholder for progress updates
