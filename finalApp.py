@@ -163,7 +163,7 @@ def public_user_section():
     st.write("- **Shape**: Most asteroids are irregularly shaped because they lack sufficient gravity to form a perfect sphere. Some look like lumpy rocks, while others have strange, elongated shapes.")
 
     st.write("- **Speed**: Asteroids orbit the Sun at different speeds, depending on their distance from the Sun. On average, asteroids move at speeds of **25,000 to 75,000 km/h (15,500 to 46,500 mph)**. However, their speed can vary greatly:")
-      st.write("- The relative speed of an asteroid approaching Earth can reach up to **30 km/s (about 108,000 km/h or 67,000 mph)**.:)
+      st.write("- The relative speed of an asteroid approaching Earth can reach up to **30 km/s (about 108,000 km/h or 67,000 mph)**.")
 
     st.write("- **Orbit**: Asteroids typically have elliptical (oval-shaped) orbits, and most are found in the **main asteroid belt** between Mars and Jupiter. Some asteroids, however, have orbits that bring them closer to Earth, and they are called **Near-Earth Asteroids (NEAs)**.")
 
