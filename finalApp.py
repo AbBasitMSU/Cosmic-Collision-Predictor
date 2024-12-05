@@ -252,9 +252,9 @@ def official_user_section():
             st.write("No significant collision risk detected based on the provided parameters.")
 
     # Train Models Section
-    st.subheader("Train Models")
+    st.sidebar.subheader("Train Models")
 
-    if st.button("Train Impact Prediction Model"):
+    if st.sidebar.button("Train Impact Prediction Model"):
         # Create a placeholder for the entire training status
         status_placeholder = st.empty()
 
@@ -279,9 +279,9 @@ def official_user_section():
         st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
     
     # Model Evaluation Section
-    st.subheader("Model Evaluation and Documentation")
+    st.sidebar.header("Model Evaluation and Documentation")
 
-    if st.button("Evaluate Existing Models"):
+    if st.sidebar.button("Evaluate Existing Models"):
         # Placeholder for model evaluation status
         evaluation_status_placeholder = st.empty()
     
