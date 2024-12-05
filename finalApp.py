@@ -131,7 +131,7 @@ def load_model():
 # Public User Section
 def public_user_section():
     st.sidebar.header("Learn About Asteroids")
-    if st.sidebar.button("Learn")
+    if st.sidebar.button("Learn"):
         st.write.header("###**Here’s some information about asteroids, their origin, composition, and typical properties:**")
     
         st.write("### **What Are Asteroids?**")
