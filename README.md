@@ -72,7 +72,7 @@ Guide to the Project
 10. Compared observations and searched for improved accuracy for each model.
 
 ## Accuracy for the Neural Network Model (Pre-optimization and Optimized results)
-![NN_model_AccuracyComparison](https://github.com/AbBasitMSU/Asteroid-Impact-Prediction/assets/152572519/7282e365-dd18-4676-8bd1-9dc1c155a53b)
+![NN_model_AccuracyComparison](https://github.com/maparisio/Asteroid-Impact-Prediction/assets/152572519/7282e365-dd18-4676-8bd1-9dc1c155a53b)
 
 ## Accuracy for the Supervised Learning Model
 
