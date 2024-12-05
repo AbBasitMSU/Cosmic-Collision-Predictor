@@ -264,7 +264,7 @@ def official_user_section():
         # Evaluation logic using the saved models
         model = load_model()
         # Create a DataFrame containing training history
-        history_df = pd.DataFrame(fit_model.history)
+        history_df = pd.DataFrame(model.history)
 
         # Increase the index by 1 to match the number of epochs
         history_df.index += 1
