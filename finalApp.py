@@ -53,7 +53,6 @@ def load_credentials():
         with open(CREDENTIALS_FILE, "r") as file:
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        st.warning("Credentials file is missing or corrupted. Initializing a new one.")
         return {}
     
 def save_credentials(credentials):
