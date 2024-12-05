@@ -278,26 +278,26 @@ def official_user_section():
     if st.button("View Documentation"):
         st.write("Displaying documentation for asteroid prediction models...")
         st.write("Original_Datasets: \n impacts.csv \n orbits.csv \n cleaned_Asteroid_orbit.csv <-- csv file created via Jupyter Notebook after data was cleaned prior to creating the ML models (NN model version) \n h5_Files \n Asteroid_Impact_Model.h5 \n Asteroid_Impact_Optimization_Model.h5 \n Asteroid definitions.pptx <-- Powerpoint presentation Intro to the project and definitions of the different columns in the dataset. \n Asteroid_Predictions.ipynb <-- File started in Jupyter Notebook for data cleanup prior to Neural Network ML training \n Asteroid_Predictions_Colab.ipynb <-- File worked on via Google Colab after cleanup, to train our Neural Network ML model prior to optimization. \n Asteroid_Predictions_Optimization_Colab.ipynb <-- File worked on via Google Colab. Optimized version after training our Neural Network ML model.")
-        asteroid-impact-prediction-SL-CFM.ipynb <-- File worked on via Jupyter Notebook for Supervised Learning, with unbalanced data.
-        asteroid_impact-prediction-SL-OverSample.ipynb <-- File worked on via Jupyter Notebook for SL, with OverSampling of the data.")
-        asteroid-impact-prediction-SL-UnderSample.ipynb <-- File worked on via Jupyter Notebook for SL, with UnderSampling of the data.
-        cleaned_Asteroid_orbit.csv <-- csv file created via Jupyter Notebook after data was cleaned prior to creating the ML models (NN model version)
-        Impacts_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on Impacts data file
-        Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on Orbits data file
-        Impacts_vs_Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on combined file of Impacts data file and Otbits data file after merging
+        st.write("asteroid-impact-prediction-SL-CFM.ipynb <-- File worked on via Jupyter Notebook for Supervised Learning, with unbalanced data.")
+        st.write("asteroid_impact-prediction-SL-OverSample.ipynb <-- File worked on via Jupyter Notebook for SL, with OverSampling of the data.")
+        st.write("asteroid-impact-prediction-SL-UnderSample.ipynb <-- File worked on via Jupyter Notebook for SL, with UnderSampling of the data.")
+        st.write("cleaned_Asteroid_orbit.csv <-- csv file created via Jupyter Notebook after data was cleaned prior to creating the ML models (NN model version)")
+        st.write("Impacts_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on Impacts data file")
+        st.write("Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on Orbits data file")
+        st.write("Impacts_vs_Orbits_Analysis.ipynb <-- This file is used to do the preprocessing seperate IDA and EDA on combined file of Impacts data file and Otbits data file after merging")
         
-        **Guide to the Project**
+        st.write("**Guide to the Project**")
 
-        Guidelines for the Project
+        st.write("Guidelines for the Project")
 
-        Collaborating with our team to pool knowledge and share ideas
+        st.write("Collaborating with our team to pool knowledge and share ideas
         Outline a scope and purpose for our project, utilzing our machine learning skills to analyze,solve, or visualize our findings
         Finding reliable data to use for our project, being mindful of copyrights, licenses, or terms of use
         Track all processes in Jupyter Notebook used for cleanup, and techniques used for Data Analysis
         Present our findings to the class on Presentation Day, with each member of our group taking turns in speaking
         Submit the URL of our GitHub repository to be graded
         Graduate and attain employment from utilizing our knowlwdge acquired from this class
-        Processes used
+        Processes used")
 
         Reading the csv files
         Cleaning the data
