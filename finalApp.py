@@ -275,7 +275,7 @@ def official_user_section():
 
         # Show the final result text and display the result image
         st.write("Result:")
-        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.png"
+        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.jpg"
         st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
     
     st.subheader("Model Evaluation and Documentation")
