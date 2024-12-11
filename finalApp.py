@@ -13,7 +13,6 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import time
-import streamlit.components.v1 as components
 
 # File to store user credentials
 CREDENTIALS_FILE = "Users.json"
@@ -99,20 +98,17 @@ def signup():
 # Function to Load CSV Data
 @st.cache_data
 def load_csv_data(filename):
-    # Attempt to load from the local folder
     file_path = os.path.join("Original_Datasets", filename)
     if os.path.exists(file_path):
         return pd.read_csv(file_path)
-    
-    # If the local file does not exist, try loading from GitHub
     github_url = f"https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Original_Datasets/{filename}"
     try:
         response = requests.get(github_url)
-        response.raise_for_status()  # Check if the request was successful
+        response.raise_for_status()
         return pd.read_csv(github_url)
-    except requests.exceptions.RequestException as e:
-        st.error(f"File not found: {filename}. Please ensure that the file exists locally or on GitHub.")
-        return pd.DataFrame()  # Return an empty DataFrame if the file is not found
+    except requests.exceptions.RequestException:
+        st.error(f"File not found: {filename}. Please ensure the file exists locally or on GitHub.")
+        return pd.DataFrame()
 
 # Random Location Generator
 def generate_random_location():
@@ -120,61 +116,26 @@ def generate_random_location():
     longitude = round(random.uniform(-180, 180), 6)
     return latitude, longitude
 
+# Function to Load Model
+@st.cache_data
+def load_model():
+    model_path = os.path.join("h5_Files", "Asteroid_Impact_Model.h5")
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found at {model_path}. Ensure the file exists in 'h5_Files'.")
+        st.stop()
+    return tf.keras.models.load_model(model_path)
+
 # Public User Section
 def public_user_section():
-    st.sidebar.header("Learn About Asteroids")
-    if st.sidebar.button("Learn"):
-        st.write("### **Here’s some information about asteroids, their origin, composition, and typical properties:**")
-        # [Information about asteroids here, keeping it the same as your original code]
-
     st.header("Future Collisions Calendar")
-    
+
     # Define collision prediction dates
-    collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates as needed
+    collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates
 
-    # Generate custom HTML for calendar
-    calendar_html = """
-    <style>
-        .calendar-table {
-            display: table;
-            border-collapse: collapse;
-            width: 100%;
-            font-family: Arial, sans-serif;
-        }
-        .calendar-cell {
-            display: table-cell;
-            padding: 8px;
-            text-align: center;
-            vertical-align: middle;
-            border: 1px solid #ddd;
-        }
-        .calendar-cell.green {
-            background-color: #d4edda; /* Light green for safe dates */
-        }
-        .calendar-cell.red {
-            background-color: #f8d7da; /* Light red for collision dates */
-            font-weight: bold;
-        }
-    </style>
-    <div class="calendar-table">
-    """
-
-    # Generate the calendar for December 2024
-    days_in_december = [datetime(2024, 12, day).date() for day in range(1, 32)]
-    for week_start in range(0, 31, 7):
-        calendar_html += "<div class='calendar-row'>"
-        for day in days_in_december[week_start:week_start + 7]:
-            cell_class = "red" if day in collision_dates else "green"
-            calendar_html += f"<div class='calendar-cell {cell_class}'>{day.day}</div>"
-        calendar_html += "</div>"
-    calendar_html += "</div>"
-
-    # Render the custom HTML calendar
-    components.html(calendar_html, height=300)
-
-    # Collision Prediction Details
+    # Dropdown Calendar
     selected_date = st.date_input("Choose a Date")
 
+    # Check if the selected date is a collision date
     if selected_date in collision_dates:
         st.write("**Collision Alert!**")
         st.write(f"Date: {selected_date}")
@@ -186,19 +147,54 @@ def public_user_section():
     else:
         st.write(f"No collision predicted on {selected_date}.")
 
-# Function to Load Model
-@st.cache_data
-def load_model():
-    model_path = os.path.join("h5_Files", "Asteroid_Impact_Model.h5")
-    if not os.path.exists(model_path):
-        st.error(f"Model file not found at {model_path}. Ensure the file exists in 'h5_Files'.")
-        st.stop()
-    return tf.keras.models.load_model(model_path)
+    st.subheader("Enter New Asteroid Details")
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+
+    if st.button("Predict Collision"):
+        if velocity > 25.0 and distance < 550.0 and angle < 70.0 and size > 5.0:
+            latitude, longitude = generate_random_location()
+            possible_date = datetime(2024, 12, random.randint(1, 28)).date()
+            st.write("**Possible Collision Detected!**")
+            st.write(f"Date: {possible_date}")
+            st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
+            st.write("Impact Area: High Risk")
+            st.subheader("Precautions")
+            st.write("""
+            1. Stay indoors and away from windows.
+            2. Stock up on food, water, and essentials.
+            3. Follow local government advisories.
+            """)
+        else:
+            st.write("No significant collision risk detected based on the provided parameters.")
 
 # Official User Section
 def official_user_section():
-    # Original official_user_section function here
-    pass
+    st.header(f"Welcome, {st.session_state['username']}")
+    st.subheader("Analysis and Visualization")
+
+    data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
+    
+    if data_choice == "Cleaned Asteroid Data":
+        df = load_csv_data("cleaned_Asteroid_orbit.csv")
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
+    elif data_choice == "Raw Orbit Data":
+        df = load_csv_data("orbits.csv")
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
+    elif data_choice == "Raw Impact Data":
+        df = load_csv_data("impacts.csv")
+        if not df.empty:
+            st.write(df)
+        else:
+            st.error("No data available to display.")
 
 # Main Function
 def main():
