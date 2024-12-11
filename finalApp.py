@@ -522,8 +522,8 @@ def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
     st.markdown("<h1 style='text-align: center;'>Cosmic Collision Predictor</h1>", unsafe_allow_html=True)
 
-    st.header("Navigation")
-    user_role = st.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
+    st.sidebar.header("Navigation")
+    user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
 
     if user_role == "Select User":
         st.write ("This app is going to help two types of people.")
