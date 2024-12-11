@@ -197,7 +197,10 @@ def public_user_section():
 
         st.write("Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     
-    # Highlight dates using custom CSS for collision and non-collision dates
+    # Set a collision prediction date
+collision_date = datetime(2024, 12, 10).date()
+
+# Highlight dates using custom CSS for collision and non-collision dates
 def generate_calendar_css(collision_date):
     all_dates_css = ""
     # Get all days for the current month (as an example)
@@ -248,8 +251,6 @@ def create_custom_calendar(collision_date):
     calendar_html += "</div>"
     return calendar_html
 
-# Set a collision prediction date
-collision_date = datetime(2024, 12, 10).date()
 
 # Display custom calendar
 calendar_css = generate_calendar_css(collision_date)
