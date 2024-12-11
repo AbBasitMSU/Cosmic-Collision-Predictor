@@ -241,24 +241,24 @@ def public_user_section():
                 unsafe_allow_html=True,
             )
         
-    st.subheader("Enter New Asteroid Details")
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
-    size = st.number_input("Size (km)", min_value=0.0, value=0.0, step=1.0)
+        st.subheader("Enter New Asteroid Details")
+        velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
+        distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
+        angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
+        size = st.number_input("Size (km)", min_value=0.0, value=0.0, step=1.0)
 
-    if st.button("Predict Collision"):
-        if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 01.0:
-            latitude, longitude = generate_random_location()
-            possible_date = datetime(2024, 12, random.randint(1, 28)).date()
-            st.write("**Possible Collision Detected!**")
-            st.write(f"Date: {possible_date}")
-            st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
-            st.write("Impact Area: High Risk")
-            st.subheader("Precautions")
-            st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
-        else:
-            st.write("No significant collision risk detected based on the provided parameters.")
+        if st.button("Predict Collision"):
+            if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 01.0:
+                latitude, longitude = generate_random_location()
+                possible_date = datetime(2024, 12, random.randint(1, 28)).date()
+                st.write("**Possible Collision Detected!**")
+                st.write(f"Date: {possible_date}")
+                st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
+                st.write("Impact Area: High Risk")
+                st.subheader("Precautions")
+                st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+            else:
+                st.write("No significant collision risk detected based on the provided parameters.")
 
 # Official User Section
 def official_user_section():
