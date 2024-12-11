@@ -205,18 +205,41 @@ def public_user_section():
     # Dropdown Calendar
     selected_date = st.date_input("Choose a Date")
 
+    # Display collision dates
+    st.write("**Collision Prediction Dates:**")
+    for date in collision_dates:
+        st.markdown(f"<span style='color:red; font-weight:bold;'>{date}</span>", unsafe_allow_html=True)
+
     # Check if the selected date is a collision date
     if selected_date in collision_dates:
-        st.write("**Collision Alert!**")
-        st.write(f"Date: {selected_date}")
-        st.write("Location: Latitude 23.5, Longitude 78.9")
-        st.write("Impact Time: 14:30 UTC")
-        st.write("Impact Area: 100 km radius")
-        st.subheader("Precautions")
-        st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+        st.markdown(
+            f"""
+            <div style='background-color:#ffcccc; padding:10px; border-radius:5px;'>
+                <h4 style='color:red;'>**Collision Alert!**</h4>
+                <p><b>Date:</b> {selected_date}</p>
+                <p><b>Location:</b> Latitude 23.5, Longitude 78.9</p>
+                <p><b>Impact Time:</b> 14:30 UTC</p>
+                <p><b>Impact Area:</b> 100 km radius</p>
+                <h4 style='color:darkred;'>Precautions:</h4>
+                <ol>
+                    <li>Stay indoors and away from windows.</li>
+                    <li>Stock up on food, water, and essentials.</li>
+                    <li>Follow local government advisories.</li>
+                </ol>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     else:
-        st.write(f"No collision predicted on {selected_date}.")
-    
+        st.markdown(
+            f"""
+            <div style='background-color:#ccffcc; padding:10px; border-radius:5px;'>
+                <h4 style='color:green;'>No collision predicted on {selected_date}.</h4>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
