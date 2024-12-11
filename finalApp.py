@@ -288,7 +288,40 @@ def official_user_section():
         st.write("Result:")
         github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.jpg"
         st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
-    else:
+    elseif:
+        # Model Evaluation Section
+        st.sidebar.header("Model Evaluation and Documentation")
+
+        if st.sidebar.button("Evaluate Existing Models"):
+            # Placeholder for model evaluation status
+            evaluation_status_placeholder = st.empty()
+        
+            # Display initial status
+            evaluation_status_placeholder.write("Evaluating model...")
+    
+            # Placeholder for updating evaluation progress
+            evaluation_progress_placeholder = st.empty()
+    
+            # Simulate evaluation (e.g., looping through evaluation phases)
+            for phase in range(1, 6):  # Assuming 5 phases of evaluation
+                time.sleep(0.5)  # Simulate delay (adjust as needed)
+                evaluation_progress_placeholder.text(f"Evaluation phase {phase}/5...")
+    
+            # After all phases are complete, clear the progress and update status
+            evaluation_progress_placeholder.empty()  # Clear the evaluation progress text
+            evaluation_status_placeholder.write("Model Evaluation Completed!")
+    
+            # Show the result text and display two images from GitHub
+            st.write("Results:")
+    
+            # URL of images stored in the GitHub repository
+            image_1_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/IMG_0228.png"
+            image_2_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/IMG_0229.png"
+    
+            # Display the images with captions
+            st.image(image_1_url, caption="Evaluation Result - 1", use_column_width=True)
+            st.image(image_2_url, caption="Evaluation Result - 2", use_column_width=True)
+        else:
         st.header(f"Welcome, {st.session_state['username']}")
         st.subheader("Analysis, and Visualization")
 
@@ -375,38 +408,7 @@ def official_user_section():
                 st.write("No significant collision risk detected based on the provided parameters.")
 
         
-    # Model Evaluation Section
-    st.sidebar.header("Model Evaluation and Documentation")
-
-    if st.sidebar.button("Evaluate Existing Models"):
-        # Placeholder for model evaluation status
-        evaluation_status_placeholder = st.empty()
     
-        # Display initial status
-        evaluation_status_placeholder.write("Evaluating model...")
-
-        # Placeholder for updating evaluation progress
-        evaluation_progress_placeholder = st.empty()
-
-        # Simulate evaluation (e.g., looping through evaluation phases)
-        for phase in range(1, 6):  # Assuming 5 phases of evaluation
-            time.sleep(0.5)  # Simulate delay (adjust as needed)
-            evaluation_progress_placeholder.text(f"Evaluation phase {phase}/5...")
-
-        # After all phases are complete, clear the progress and update status
-        evaluation_progress_placeholder.empty()  # Clear the evaluation progress text
-        evaluation_status_placeholder.write("Model Evaluation Completed!")
-
-        # Show the result text and display two images from GitHub
-        st.write("Results:")
-
-        # URL of images stored in the GitHub repository
-        image_1_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/IMG_0228.png"
-        image_2_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/IMG_0229.png"
-
-        # Display the images with captions
-        st.image(image_1_url, caption="Evaluation Result - 1", use_column_width=True)
-        st.image(image_2_url, caption="Evaluation Result - 2", use_column_width=True)
 
     st.sidebar.header("Check Documentation")
     if st.sidebar.button("View Documentation"):
