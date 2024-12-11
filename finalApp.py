@@ -495,7 +495,7 @@ def official_user_section():
         velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
         distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
         angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
-        size = st.number_input("Size (km)", min_value=0.0, value=0.0, step=0.1)
+        size = st.number_input("Size (km)", min_value=0.0, value=0.0, step=1.0)
         
         if st.button("Predict Collision"):
             if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 1.0:
