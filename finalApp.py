@@ -361,9 +361,9 @@ def official_user_section():
         epoch_placeholder = st.empty()
 
         # Simulate training with 100 epochs (replace this with actual training logic)
-        for epoch in range(1, 101):  # Loop from 1 to 100 (inclusive)
+        for epoch in range(1, 21):  # Loop from 1 to 20 (inclusive)
             time.sleep(0.6)  # Simulate a short delay (adjust time as needed)
-            epoch_placeholder.text(f"Epoch {epoch}/100...")
+            epoch_placeholder.text(f"Epoch {epoch}/20...")
 
         # After all epochs are complete, clear the epoch placeholder and update the status placeholder
         epoch_placeholder.empty()  # Remove the epoch progress text
