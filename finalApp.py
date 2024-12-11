@@ -292,7 +292,7 @@ def official_user_section():
         
     else:
         st.header(f"Welcome, {st.session_state['username']}")
-            st.subheader("Analysis, and Visualization")
+        st.subheader("Analysis, and Visualization")
     
             data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
         
