@@ -262,35 +262,6 @@ def public_user_section():
 
 # Official User Section
 def official_user_section():
-
-# Train Models Section
-    st.sidebar.subheader("Train Models")
-    
-    if st.sidebar.button("Train Impact Prediction Model"):
-        # Create a placeholder for the entire training status
-        status_placeholder = st.empty()
-    
-        # Display initial status
-        status_placeholder.write("Training model started...")
-    
-        # Placeholder for updating epoch progress
-        epoch_placeholder = st.empty()
-    
-        # Simulate training with 100 epochs (replace this with actual training logic)
-        for epoch in range(1, 21):  # Loop from 1 to 20 (inclusive)
-            time.sleep(0.6)  # Simulate a short delay (adjust time as needed)
-            epoch_placeholder.text(f"Epoch {epoch}/20...")
-    
-        # After all epochs are complete, clear the epoch placeholder and update the status placeholder
-        epoch_placeholder.empty()  # Remove the epoch progress text
-        status_placeholder.write("Model Training Completed!")
-    
-        # Show the final result text and display the result image
-        st.write("Result:")
-        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.jpg"
-        st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
-        
-    else:
         st.header(f"Welcome, {st.session_state['username']}")
         st.subheader("Analysis, and Visualization")
     
@@ -375,6 +346,34 @@ def official_user_section():
                     """)
             else:
                 st.write("No significant collision risk detected based on the provided parameters.")
+
+    # Train Models Section
+    st.sidebar.subheader("Train Models")
+    
+    if st.sidebar.button("Train Impact Prediction Model"):
+        # Create a placeholder for the entire training status
+        status_placeholder = st.empty()
+    
+        # Display initial status
+        status_placeholder.write("Training model started...")
+    
+        # Placeholder for updating epoch progress
+        epoch_placeholder = st.empty()
+    
+        # Simulate training with 100 epochs (replace this with actual training logic)
+        for epoch in range(1, 21):  # Loop from 1 to 20 (inclusive)
+            time.sleep(0.6)  # Simulate a short delay (adjust time as needed)
+            epoch_placeholder.text(f"Epoch {epoch}/20...")
+    
+        # After all epochs are complete, clear the epoch placeholder and update the status placeholder
+        epoch_placeholder.empty()  # Remove the epoch progress text
+        status_placeholder.write("Model Training Completed!")
+    
+        # Show the final result text and display the result image
+        st.write("Result:")
+        github_image_url = "https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/Result Images/Accuracy of NN Model.jpg"
+        st.image(github_image_url, caption="Impact Model Training Result", use_column_width=True)
+
 
         # Model Evaluation Section
         st.sidebar.header("Model Evaluation and Documentation")
