@@ -197,48 +197,49 @@ def public_user_section():
 
         st.write("Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     
-    st.header("Future Collisions Calendar")
-
-    # Define collision prediction dates
-    collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates as needed
-
-    # Dropdown Calendar
-    selected_date = st.date_input("Choose a Date")
-
-    # Display collision dates
-    st.write("**Collision Prediction Dates:**")
-    for date in collision_dates:
-        st.markdown(f"<span style='color:red; font-weight:bold;'>{date}</span>", unsafe_allow_html=True)
-
-    # Check if the selected date is a collision date
-    if selected_date in collision_dates:
-        st.markdown(
-            f"""
-            <div style='background-color:#ffcccc; padding:10px; border-radius:5px;'>
-                <h4 style='color:red;'>**Collision Alert!**</h4>
-                <p><b>Date:</b> {selected_date}</p>
-                <p><b>Location:</b> Latitude 23.5, Longitude 78.9</p>
-                <p><b>Impact Time:</b> 14:30 UTC</p>
-                <p><b>Impact Area:</b> 100 km radius</p>
-                <h4 style='color:darkred;'>Precautions:</h4>
-                <ol>
-                    <li>Stay indoors and away from windows.</li>
-                    <li>Stock up on food, water, and essentials.</li>
-                    <li>Follow local government advisories.</li>
-                </ol>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
     else:
-        st.markdown(
-            f"""
-            <div style='background-color:#ccffcc; padding:10px; border-radius:5px;'>
-                <h4 style='color:green;'>No collision predicted on {selected_date}.</h4>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.header("Future Collisions Calendar")
+
+        # Define collision prediction dates
+        collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates as needed
+
+        # Dropdown Calendar
+        selected_date = st.date_input("Choose a Date")
+
+        # Display collision dates
+        st.write("**Collision Prediction Dates:**")
+        for date in collision_dates:
+            st.markdown(f"<span style='color:red; font-weight:bold;'>{date}</span>", unsafe_allow_html=True)
+
+        # Check if the selected date is a collision date
+        if selected_date in collision_dates:
+            st.markdown(
+                f"""
+                <div style='background-color:#ffcccc; padding:10px; border-radius:5px;'>
+                    <h4 style='color:red;'>**Collision Alert!**</h4>
+                    <p><b>Date:</b> {selected_date}</p>
+                    <p><b>Location:</b> Latitude 23.5, Longitude 78.9</p>
+                    <p><b>Impact Time:</b> 14:30 UTC</p>
+                    <p><b>Impact Area:</b> 100 km radius</p>
+                    <h4 style='color:darkred;'>Precautions:</h4>
+                    <ol>
+                        <li>Stay indoors and away from windows.</li>
+                        <li>Stock up on food, water, and essentials.</li>
+                        <li>Follow local government advisories.</li>
+                    </ol>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                f"""
+                <div style='background-color:#ccffcc; padding:10px; border-radius:5px;'>
+                    <h4 style='color:green;'>No collision predicted on {selected_date}.</h4>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
         
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
