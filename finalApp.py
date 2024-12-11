@@ -197,18 +197,81 @@ def public_user_section():
 
         st.write("Asteroids provide fascinating insights into the history of the solar system. Their study helps scientists understand the formation and evolution of planets and possibly even the origins of life itself. They are also a reminder of the potential threats that exist out in space, making their study important for planetary defense.")
     
-    st.header("Future Collisions Calendar")
-    selected_date = st.date_input("Choose a Date")
-    
-    if selected_date == datetime(2024, 12, 10).date():
-        st.write("**Collision Alert!**")
-        st.write(f"Date: {selected_date}")
-        st.write("Location: Latitude 23.5, Longitude 78.9")
-        st.write("Impact Time: 14:30 UTC")
-        st.write("Impact Area: 100 km radius")
-        st.subheader("Precautions")
-        st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+    # Highlight dates using custom CSS for collision and non-collision dates
+def generate_calendar_css(collision_date):
+    all_dates_css = ""
+    # Get all days for the current month (as an example)
+    today = datetime.now()
+    for day in range(1, 32):  # Assuming up to 31 days in a month
+        try:
+            date_obj = datetime(today.year, today.month, day)
+            color = "red" if date_obj.date() == collision_date else "green"
+            all_dates_css += f"""
+            .day--{day} {{
+                background-color: {color} !important;
+                color: white !important;
+                border-radius: 50% !important;
+                padding: 5px;
+            }}
+            """
+        except ValueError:
+            pass  # Handle invalid days (e.g., February 30th)
 
+    return f"""
+    <style>
+        .calendar {{
+            text-align: center;
+            margin-top: 20px;
+        }}
+        .day {{
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            line-height: 40px;
+            font-size: 14px;
+        }}
+        {all_dates_css}
+    </style>
+    """
+
+def create_custom_calendar(collision_date):
+    today = datetime.now()
+    calendar_html = "<div class='calendar'>"
+    for day in range(1, 32):  # Assuming up to 31 days
+        try:
+            date_obj = datetime(today.year, today.month, day)
+            day_class = f"day day--{day}"
+            calendar_html += f"<div class='{day_class}'>{day}</div>"
+        except ValueError:
+            pass  # Handle invalid days
+    calendar_html += "</div>"
+    return calendar_html
+
+# Set a collision prediction date
+collision_date = datetime(2024, 12, 10).date()
+
+# Display custom calendar
+calendar_css = generate_calendar_css(collision_date)
+calendar_html = create_custom_calendar(collision_date)
+st.markdown(calendar_css, unsafe_allow_html=True)
+st.markdown(calendar_html, unsafe_allow_html=True)
+
+# Selected date interaction
+selected_date = st.date_input("Choose a Date")
+
+# Highlighted collision alert
+if selected_date == collision_date:
+    st.write("**Collision Alert!**")
+    st.write(f"Date: {selected_date}")
+    st.write("Location: Latitude 23.5, Longitude 78.9")
+    st.write("Impact Time: 14:30 UTC")
+    st.write("Impact Area: 100 km radius")
+    st.subheader("Precautions")
+    st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+else:
+    st.write("No significant collision risk detected for the selected date.")
+    
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
