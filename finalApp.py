@@ -602,90 +602,90 @@ def official_user_section():
             st.write("https://pixabay.com/illustrations/asteroid-planet-land-space-span-4376113/")
         else:
             st.header(f"Welcome, {st.session_state['username']}")
-                st.subheader("Analysis, and Visualization")
+            st.subheader("Analysis, and Visualization")
+    
+            data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
         
-                data_choice = st.selectbox("Choose Data to View", ["Raw Orbit Data", "Cleaned Asteroid Data", "Raw Impact Data"])
-            
-                if data_choice == "Cleaned Asteroid Data":
-                    df = load_csv_data("cleaned_Asteroid_orbit.csv")
-                    if not df.empty:
-                        st.write(df)
-                    else:
-                        st.error("No data available to display.")
-                elif data_choice == "Raw Orbit Data":
-                    df = load_csv_data("orbits.csv")
-                    if not df.empty:
-                        st.write(df)
-                    else:
-                        st.error("No data available to display.")
-                elif data_choice == "Raw Impact Data":
-                    df = load_csv_data("impacts.csv")
-                    if not df.empty:
-                        st.write(df)
-                    else:
-                        st.error("No data available to display.")
-            
-                st.subheader("Detailed Analysis")
-                analysis_choice = st.selectbox("Choose Analysis", ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"])
-                
-                # Analysis based on selected choice
-                if analysis_choice == "Impact Analysis":
-                    st.write("Performing Impact Analysis...")
-                    # Simple Analysis Example - Histogram
-                    impacts_df = load_csv_data("impacts.csv")
-                    if not impacts_df.empty:
-                        fig, ax = plt.subplots()
-                        sns.histplot(impacts_df['Asteroid Magnitude'], ax=ax, bins=20, kde=True)
-                        ax.set_title("Asteroid Magnitude Distribution")
-                        ax.set_xlabel("Asteroid Magnitude")
-                        st.pyplot(fig)
-            
-                elif analysis_choice == "Orbits Analysis":
-                    st.write("Performing Orbits Analysis...")
-                    # Scatter Plot Example
-                    orbits_df = load_csv_data("orbits.csv")
-                    if not orbits_df.empty:
-                        fig = px.scatter(orbits_df, x='Orbit Eccentricity', y='Orbit Inclination (deg)', color='Object Classification',
-                                         title="Orbit Eccentricity vs Inclination")
-                        st.plotly_chart(fig)
-            
-                elif analysis_choice == "Orbits vs Impacts Analysis":
-                    st.write("Performing Orbits vs Impacts Analysis...")
-                    # Combined Analysis Example
-                    orbits_df = load_csv_data("orbits.csv")
-                    impacts_df = load_csv_data("impacts.csv")
-                    if not orbits_df.empty and not impacts_df.empty:
-                        comparison_df = pd.DataFrame({
-                            'Orbit Eccentricity': orbits_df['Orbit Eccentricity'].mean(),
-                            'Orbit Inclination (deg)': orbits_df['Orbit Inclination (deg)'].mean(),
-                            'Asteroid Magnitude': impacts_df['Asteroid Magnitude'].mean()
-                        }, index=[0])
-                        fig = px.bar(comparison_df, barmode='group', title="Orbits vs Impacts Data Comparison")
-                        st.plotly_chart(fig)
-            
-                st.subheader("Enter New Asteroid Details")
-                velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
-                distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
-                angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
-                size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
-            
-                if st.button("Predict Collision"):
-                    if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 1.0:
-                            latitude, longitude = generate_random_location()
-                            possible_date = datetime(2024, 12, random.randint(1, 28)).date()
-                            st.write("**Possible Collision Detected!**")
-                            st.write(f"Date: {possible_date}")
-                            st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
-                            st.write("Impact Area: High Risk")
-                            st.subheader("Precautions")
-                            st.write("""
-                            1. Stay indoors and away from windows.
-                            2. Stock up on food, water, and essentials.
-                            3. Follow local government advisories.
-                            """)
-                    else:
-                        st.write("No significant collision risk detected based on the provided parameters.")
+            if data_choice == "Cleaned Asteroid Data":
+                df = load_csv_data("cleaned_Asteroid_orbit.csv")
+                if not df.empty:
+                    st.write(df)
+                else:
+                    st.error("No data available to display.")
+            elif data_choice == "Raw Orbit Data":
+                df = load_csv_data("orbits.csv")
+                if not df.empty:
+                    st.write(df)
+                else:
+                    st.error("No data available to display.")
+            elif data_choice == "Raw Impact Data":
+                df = load_csv_data("impacts.csv")
+                if not df.empty:
+                    st.write(df)
+                else:
+                    st.error("No data available to display.")
         
+            st.subheader("Detailed Analysis")
+            analysis_choice = st.selectbox("Choose Analysis", ["Impact Analysis", "Orbits Analysis", "Orbits vs Impacts Analysis"])
+            
+            # Analysis based on selected choice
+            if analysis_choice == "Impact Analysis":
+                st.write("Performing Impact Analysis...")
+                # Simple Analysis Example - Histogram
+                impacts_df = load_csv_data("impacts.csv")
+                if not impacts_df.empty:
+                    fig, ax = plt.subplots()
+                    sns.histplot(impacts_df['Asteroid Magnitude'], ax=ax, bins=20, kde=True)
+                    ax.set_title("Asteroid Magnitude Distribution")
+                    ax.set_xlabel("Asteroid Magnitude")
+                    st.pyplot(fig)
+        
+            elif analysis_choice == "Orbits Analysis":
+                st.write("Performing Orbits Analysis...")
+                # Scatter Plot Example
+                orbits_df = load_csv_data("orbits.csv")
+                if not orbits_df.empty:
+                    fig = px.scatter(orbits_df, x='Orbit Eccentricity', y='Orbit Inclination (deg)', color='Object Classification',
+                                     title="Orbit Eccentricity vs Inclination")
+                    st.plotly_chart(fig)
+        
+            elif analysis_choice == "Orbits vs Impacts Analysis":
+                st.write("Performing Orbits vs Impacts Analysis...")
+                # Combined Analysis Example
+                orbits_df = load_csv_data("orbits.csv")
+                impacts_df = load_csv_data("impacts.csv")
+                if not orbits_df.empty and not impacts_df.empty:
+                    comparison_df = pd.DataFrame({
+                        'Orbit Eccentricity': orbits_df['Orbit Eccentricity'].mean(),
+                        'Orbit Inclination (deg)': orbits_df['Orbit Inclination (deg)'].mean(),
+                        'Asteroid Magnitude': impacts_df['Asteroid Magnitude'].mean()
+                    }, index=[0])
+                    fig = px.bar(comparison_df, barmode='group', title="Orbits vs Impacts Data Comparison")
+                    st.plotly_chart(fig)
+        
+            st.subheader("Enter New Asteroid Details")
+            velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
+            distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
+            angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
+            size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+        
+            if st.button("Predict Collision"):
+                if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 1.0:
+                        latitude, longitude = generate_random_location()
+                        possible_date = datetime(2024, 12, random.randint(1, 28)).date()
+                        st.write("**Possible Collision Detected!**")
+                        st.write(f"Date: {possible_date}")
+                        st.write(f"Location: Latitude {latitude}, Longitude {longitude}")
+                        st.write("Impact Area: High Risk")
+                        st.subheader("Precautions")
+                        st.write("""
+                        1. Stay indoors and away from windows.
+                        2. Stock up on food, water, and essentials.
+                        3. Follow local government advisories.
+                        """)
+                else:
+                    st.write("No significant collision risk detected based on the provided parameters.")
+
 # Main Function
 def main():
     set_background("https://raw.githubusercontent.com/AbBasitMSU/Cosmic-Collision-Predictor/main/IMG_0222.webp")
