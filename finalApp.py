@@ -199,23 +199,24 @@ def public_user_section():
     
     st.header("Future Collisions Calendar")
 
-# Define collision prediction dates
-collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates as needed
+    # Define collision prediction dates
+    collision_dates = [datetime(2024, 12, 10).date(), datetime(2024, 12, 15).date()]  # Add more collision dates as needed
 
-# Dropdown Calendar
-selected_date = st.date_input("Choose a Date")
+    # Dropdown Calendar
+    selected_date = st.date_input("Choose a Date")
 
-# Check if the selected date is a collision date
-if selected_date in collision_dates:
-    st.write("**Collision Alert!**")
-    st.write(f"Date: {selected_date}")
-    st.write("Location: Latitude 23.5, Longitude 78.9")
-    st.write("Impact Time: 14:30 UTC")
-    st.write("Impact Area: 100 km radius")
-    st.subheader("Precautions")
-    st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
-else:
-    st.write(f"No collision predicted on {selected_date}.")
+    # Check if the selected date is a collision date
+    if selected_date in collision_dates:
+        st.write("**Collision Alert!**")
+        st.write(f"Date: {selected_date}")
+        st.write("Location: Latitude 23.5, Longitude 78.9")
+        st.write("Impact Time: 14:30 UTC")
+        st.write("Impact Area: 100 km radius")
+        st.subheader("Precautions")
+        st.write("1. Stay indoors and away from windows.\n2. Stock up on food, water, and essentials.\n3. Follow local government advisories.")
+    else:
+        st.write(f"No collision predicted on {selected_date}.")
+    
     st.subheader("Enter New Asteroid Details")
     velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
     distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
