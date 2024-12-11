@@ -491,7 +491,9 @@ def main():
     user_role = st.sidebar.selectbox("Who are you?", ["Select User", "Public User", "Official User"])
 
     if user_role == "Select User":
-        st.write ("This app is going to help two types of people, 1: Genral Public and, 2: Sceintific Persons. Please Choose who you are from the left panel and proceed ahead.")
+        st.write ("This app is going to help two types of people.")
+        st.write ("1: Genral Public and, 2: Sceintific Persons.")
+        st.write ("Please Choose who you are from the left panel and proceed ahead.")
     if user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
