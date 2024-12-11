@@ -218,13 +218,13 @@ def public_user_section():
         st.write(f"No collision predicted on {selected_date}.")
     
     st.subheader("Enter New Asteroid Details")
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
-    size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
+    size = st.number_input("Size (km)", min_value=0.0, value=0.0, step=1.0)
 
     if st.button("Predict Collision"):
-        if velocity > 25.0 and distance < 550.0 and angle < 70.0 and size > 05.0:
+        if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 01.0:
             latitude, longitude = generate_random_location()
             possible_date = datetime(2024, 12, random.randint(1, 28)).date()
             st.write("**Possible Collision Detected!**")
@@ -301,13 +301,13 @@ def official_user_section():
             st.plotly_chart(fig)
 
     st.subheader("Enter New Asteroid Details")
-    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=20.0, step=0.1)
-    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=1.0, step=0.1)
-    angle = st.number_input("Angle (degrees)", min_value=0.0, value=45.0, step=0.1)
+    velocity = st.number_input("Velocity (km/s)", min_value=0.0, value=0.0, step=1.0)
+    distance = st.number_input("Distance from Earth (AU)", min_value=0.0, value=0.0, step=1.0)
+    angle = st.number_input("Angle (degrees)", min_value=0.0, value=0.0, step=1.0)
     size = st.number_input("Size (km)", min_value=0.0, value=1.0, step=0.1)
 
     if st.button("Predict Collision"):
-        if velocity > 25.0 and distance < 550.0 and angle < 70.0 and size > 05.0:
+        if velocity > 1.0 and distance < 2000.0 and angle < 70.0 and size > 1.0:
                 latitude, longitude = generate_random_location()
                 possible_date = datetime(2024, 12, random.randint(1, 28)).date()
                 st.write("**Possible Collision Detected!**")
