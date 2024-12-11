@@ -524,9 +524,9 @@ def main():
     if user_role == "Select User":
         st.write ("This app is going to help two types of people.")
         st.write ("1: Genral Public and, 2: Sceintific Persons.")
-        st.write ("Please Choose who you are from the left panel and proceed ahead.")
         st.write (" Public users can check the coming collision presiction dates with all approximate details and also can check new asteriod predictions if they have details of Asteriod. Apart from that Public Users can learn about the Asteriods and its compositions.")
         st.write (" Official Users need to signup and login after that they can Check the data on which models are working and train model and get results also of the existing data. Apart from that they can read the whole Documentation of project and also visulize the data by various plots.")
+        st.write ("<font color = 'Green'>**Please Choose who you are from the left panel and proceed ahead.**")
     if user_role == "Public User":
         public_user_section()
     elif user_role == "Official User":
